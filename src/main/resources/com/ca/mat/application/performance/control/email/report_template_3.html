@@ -1,0 +1,495 @@
+<!--
+/*
+ * The 3-Clause BSD License
+
+ * Copyright © 2021 Broadcom. All rights reserved. The term “Broadcom” refers to Broadcom Inc. and/or its
+ * affiliates. All authorized reproductions of this software must be marked with this language.
+
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+
+ * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
+ * and the following disclaimer.
+
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ * and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+ * 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written permission.
+
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+*/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <title>Performance Benchmarking Report</title>
+    <style> body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        font-size: 12pt;
+    }
+
+    body, a, a:visited {
+        color: #303030;
+    }
+
+    #content {
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    #content h1 {
+        font-size: 160%;
+        margin-bottom: 10px;
+    }
+
+    #footer {
+        margin-top: 100px;
+        font-size: 80%;
+        white-space: nowrap;
+    }
+
+    #footer, #footer a {
+        color: #a0a0a0;
+    }
+
+    #line-wrapping-toggle {
+        vertical-align: middle;
+    }
+
+    #label-for-line-wrapping-toggle {
+        vertical-align: middle;
+    }
+
+    ul {
+        margin-left: 0;
+    }
+
+    h1, h2, h3 {
+        white-space: nowrap;
+    }
+
+    h2 {
+        font-size: 120%;
+    }
+
+    ul.tabLinks {
+        padding-left: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        overflow: auto;
+        min-width: 800px;
+        width: auto !important;
+        width: 800px;
+    }
+
+    ul.tabLinks li {
+        float: left;
+        height: 100%;
+        list-style: none;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-bottom: 0;
+        -moz-border-radius: 7px;
+        border-radius: 7px;
+        margin-right: 25px;
+        border: solid 1px #d4d4d4;
+        background-color: #f0f0f0;
+    }
+
+    ul.tabLinks li:hover {
+        background-color: #fafafa;
+    }
+
+    ul.tabLinks li.selected {
+        background-color: #c5f0f5;
+        border-color: #c5f0f5;
+    }
+
+    ul.tabLinks a {
+        font-size: 120%;
+        display: block;
+        outline: none;
+        text-decoration: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    ul.tabLinks li h2 {
+        margin: 0;
+        padding: 0;
+    }
+
+    div.tab {
+    }
+
+    div.selected {
+        display: block;
+    }
+
+    div.deselected {
+        display: none;
+    }
+
+    div.tab table {
+        min-width: 350px;
+        width: auto !important;
+        width: 350px;
+        border-collapse: collapse;
+    }
+
+    div.tab th, div.tab table {
+        border-bottom: solid #d0d0d0 1px;
+    }
+
+    div.tab th {
+        text-align: left;
+        white-space: nowrap;
+        padding-left: 6em;
+    }
+
+    div.tab th:first-child {
+        padding-left: 0;
+    }
+
+    div.tab td {
+        white-space: nowrap;
+        padding-left: 6em;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    div.tab td:first-child {
+        padding-left: 0;
+    }
+
+    div.tab td.numeric, div.tab th.numeric {
+        text-align: right;
+    }
+
+    span.code {
+        display: inline-block;
+        margin-top: 0em;
+        margin-bottom: 1em;
+    }
+
+    span.code pre {
+        font-size: 11pt;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0;
+        background-color: #f7f7f7;
+        border: solid 1px #d0d0d0;
+        min-width: 700px;
+        width: auto !important;
+        width: 700px;
+    }
+
+    span.wrapped pre {
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+
+    label.hidden {
+        display: none;
+    }
+
+    #summary {
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+
+    #summary table {
+        border-collapse: collapse;
+    }
+
+    #summary td {
+        vertical-align: top;
+    }
+
+    .breadcrumbs, .breadcrumbs a {
+        color: #606060;
+    }
+
+    .infoBox {
+        width: 130px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        text-align: center;
+    }
+
+    .infoBox p {
+        margin: 0;
+    }
+
+    .counter, .percent {
+        font-size: 120%;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    #duration {
+        width: 125px;
+    }
+
+    #successRate, .summaryGroup {
+        border: solid 2px #d0d0d0;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+    }
+
+    #successRate {
+        width: 180px;
+        margin-right: 35px;
+    }
+
+    #successRate .percent {
+        font-size: 180%;
+    }
+
+    .success, .success a {
+        color: #008000;
+    }
+
+    div.success, #successRate.success {
+        background-color: #bbd9bb;
+        border-color: #008000;
+    }
+
+    .failures, .failures a {
+        color: #b60808;
+    }
+
+    p.small {
+        line-height: 1.5;
+        font-size: 110%;
+    }
+
+    p.red {
+        line-height: 1.5;
+        font-size: 120%;
+        color: #b60808
+    }
+
+    .skipped, .skipped a {
+        color: #c09853;
+    }
+
+    div.failures, #successRate.failures {
+        background-color: #ecdada;
+        border-color: #b60808;
+    }
+
+    ul.linkList {
+        padding-left: 0;
+    }
+
+    .redText {
+        color: red;
+    }
+
+    ul.linkList li {
+        list-style: none;
+        margin-bottom: 5px;
+    } </style>
+</head>
+<body>
+<div id="content">
+    <h1>Performance Test Summary</h1>
+    <div id="summary">
+        <div>
+            <h2>Overall test status: <span class="redText">%INITIAL_TEST%</span></h2>
+        </div>
+        <div>
+            <h3>The following matrix has changed as compared to the average values</h3>
+        </div>
+        <table>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="infoBox %CPU_STATUS%" id="successRate">
+                        <div class="percent">%CPU%</div>
+                        <p>CPU Deviation</p>
+                    </div>
+                </td>
+                <td>
+                    <div class="infoBox %ELP_STATUS%" id="successRate">
+                        <div class="percent">%ELP%</div>
+                        <p>ELAPSE Deviation</p>
+                    </div>
+                </td>
+                <td>
+                    <div class="infoBox %EXCP_STATUS%" id="successRate">
+                        <div class="percent">%EXCP%</div>
+                        <p>EXCP Deviation</p></div>
+                </td>
+                <td>
+                    <div class="infoBox %SRVU_STATUS%" id="successRate">
+                        <div class="percent">%SRVU%</div>
+                        <p>SRVU Deviation</p></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="tabs">
+        <div id="tab1" class="tab">
+            <h1>Performance test details</h1>
+            <h2>Job details</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>JOBNAME</th>
+                    <th>STEPNAME</th>
+                    <th>PROCSTEP</th>
+                    <th>PGM/JCL</th>
+                    <th>MAT Measurement</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>%JOBNAME%</td>
+                    <td>%STEPNAME%</td>
+                    <td>%PROCSTEP%</td>
+                    <td>%PROGRAM%</td>
+                    <td>%MEASUREMENT%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="tab1" class="tab">
+            <h2>Average values (baseline):</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Average Calculation</th>
+                    <th>Elapsed</th>
+                    <th>CPU</th>
+                    <th>EXCP</th>
+                    <th>SRVU</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>%AVG_CALCULATION%</td>
+                    <td>%AVG_ELAPSED%</td>
+                    <td>%AVG_CPU%</td>
+                    <td>%AVG_EXCP%</td>
+                    <td>%AVG_SRVU%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="tab1" class="tab">
+            <h2>Current</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>COND CODE</th>
+                    <th>System</th>
+                    <th>Elapsed</th>
+                    <th>CPU</th>
+                    <th>EXCP</th>
+                    <th>SRVU</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>%CUR_DATE%</td>
+                    <td>%CUR_TIME%</td>
+                    <td>%CUR_CODE%</td>
+                    <td>%CUR_SYSTEM%</td>
+                    <td>%CUR_ELAPSED%</td>
+                    <td>%CUR_CPU%</td>
+                    <td>%CUR_EXCP%</td>
+                    <td>%CUR_SRVU%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="tab1" class="tab">
+            <h2>Previous</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>COND CODE</th>
+                    <th>System</th>
+                    <th>Elapsed</th>
+                    <th>CPU</th>
+                    <th>EXCP</th>
+                    <th>SRVU</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>%PREV_DATE%</td>
+                    <td>%PREV_TIME%</td>
+                    <td>%PREV_CODE%</td>
+                    <td>%PREV_SYSTEM%</td>
+                    <td>%PREV_ELAPSED%</td>
+                    <td>%PREV_CPU%</td>
+                    <td>%PREV_EXCP%</td>
+                    <td>%PREV_SRVU%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <br><br>
+        <h3 class="failures">%MAT_MEASUREMENT_ALERT%</h3>
+        <h2><b>For further performance analysis, use the CA MAT plugin for ZOWE CLI: </b></h2>
+        <p class="small"><b> * Measure application with CA MAT: <br> &nbsp;&nbsp; zowe mat profile invoke --profile
+            %MEASUREMENT% --jobname %MEASUREMENT% --targsys %CUR_SYSTEM% <br> </b></p>
+        <b>
+            <p class="small"><b> * View CA MAT analysis results: <br> &nbsp;- Measure overview: <br> &nbsp;&nbsp; zowe
+                mat monitor overview --profile %MEASUREMENT% <br></b></p>
+            <b>
+                <p class="small"><b> &nbsp;- Application delays: <br> &nbsp;&nbsp;zowe mat monitor delayview delay
+                    --profile %MEASUREMENT% <br></b></p>
+                <b>
+                    <p class="small"><b> &nbsp;- Codeview analysis in module mode: <br> &nbsp;&nbsp;zowe mat monitor
+                        codeview module --profile %MEASUREMENT% <br></b></p>
+                    <b>
+                        <p class="small"><b> &nbsp;- Codeview analysis in CSECT mode: <br> &nbsp;&nbsp;zowe mat monitor
+                            codeview csect --profile %MEASUREMENT% </b></p>
+                        <b>
+                            <div id="footer">
+                                <p></p>
+                                <div><label class="hidden" id="label-for-line-wrapping-toggle"
+                                            for="line-wrapping-toggle">Wrap lines <input id="line-wrapping-toggle"
+                                                                                         type="checkbox"
+                                                                                         autocomplete="off"> </label>
+                                </div>
+                                Generated by MAT Detect and Analyze at %REPORT_GENERATE_TIMESTAMP%
+                                <p></p>
+                            </div>
+                        </b>
+                    </b>
+                </b>
+            </b>
+        </b>
+    </div>
+    <b><b><b> </b></b></b></div>
+</body>
+</html>
