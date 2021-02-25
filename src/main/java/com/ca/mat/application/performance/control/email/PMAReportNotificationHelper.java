@@ -27,11 +27,10 @@
  */
 package com.ca.mat.application.performance.control.email;
 
-import java.io.File;
+import com.ca.mat.application.performance.model.AnalysisOutput;
+
 import java.io.IOException;
-
 import java.net.URISyntaxException;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,12 +38,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-
-import com.ca.mat.application.performance.model.AnalysisOutput;
-import com.ca.mat.application.performance.model.SMTPConfig;
-import com.ca.mat.application.performance.view.PMAConfiguration;
 
 
 /**
@@ -122,11 +115,9 @@ public class PMAReportNotificationHelper {
     /**
      * Sends the PMA Analysis results to the users on the pipeline.
      *
-     * @param jenkinsHome - Where the Jenkins instance is located within the Operating System.
      * @param output      - the pipeline report output.
-     * @param pipeline    - the name of the pipeline.
      */
-    public void sendOutputResults(String jenkinsHome, AnalysisOutput output, String pipeline) {
+    public String getTemplate(AnalysisOutput output) {
         String performance = output.getPerformance();
         String alert = output.getAlert();
         String history = output.getHistory();
@@ -136,150 +127,134 @@ public class PMAReportNotificationHelper {
         Job job = null;
         Matcher matcher = PATTERN_AVG_COUNT.matcher(performance);
         if (matcher.find()) {
-            try {
-                String template = "unknown";
-                int averageCount = Integer.parseInt(matcher.group(1));
-                if (averageCount == 1) {
-                    template = reportTemplate1;
+            String template = "unknown";
+            int averageCount = Integer.parseInt(matcher.group(1));
+            if (averageCount == 1) {
+                template = reportTemplate1;
+            } else {
+                Matcher avgMatcher = PATTERN_AVG.matcher(performance);
+                if (avgMatcher.find()) {
+                    short avgElapsedPct = Short.parseShort(avgMatcher.group(1).replaceAll(">999", "+999"));
+                    short avgCpuPct = Short.parseShort(avgMatcher.group(2).replaceAll(">999", "+999"));
+                    short avgExcpPct = Short.parseShort(avgMatcher.group(3).replaceAll(">999", "+999"));
+                    short avgSrvuPct = Short.parseShort(avgMatcher.group(4).replaceAll(">999", "+999"));
+                    baseline = new Baseline(avgElapsedPct, avgCpuPct, avgExcpPct, avgSrvuPct);
                 } else {
-                    Matcher avgMatcher = PATTERN_AVG.matcher(performance);
-                    if (avgMatcher.find()) {
-                        short avgElapsedPct = Short.parseShort(avgMatcher.group(1).replaceAll(">999", "+999"));
-                        short avgCpuPct = Short.parseShort(avgMatcher.group(2).replaceAll(">999", "+999"));
-                        short avgExcpPct = Short.parseShort(avgMatcher.group(3).replaceAll(">999", "+999"));
-                        short avgSrvuPct = Short.parseShort(avgMatcher.group(4).replaceAll(">999", "+999"));
-                        baseline = new Baseline(avgElapsedPct, avgCpuPct, avgExcpPct, avgSrvuPct);
-                    } else {
-                        throw new RuntimeException("Could not evaluate avg_count for performance analysis");
-                    }
+                    throw new RuntimeException("Could not evaluate avg_count for performance analysis");
                 }
+            }
 
-                // Evaluate job and program information
-                Matcher jobProgInf = PATTERN_FIRST.matcher(performance);
-                if (jobProgInf.find()) {
-                    String jobName = jobProgInf.group(1);
-                    String stepName = jobProgInf.group(2);
-                    String procStep = jobProgInf.group(3);
-                    String program = jobProgInf.group(4);
-                    job = new Job(jobName, stepName, procStep, program);
+            // Evaluate job and program information
+            Matcher jobProgInf = PATTERN_FIRST.matcher(performance);
+            if (jobProgInf.find()) {
+                String jobName = jobProgInf.group(1);
+                String stepName = jobProgInf.group(2);
+                String procStep = jobProgInf.group(3);
+                String program = jobProgInf.group(4);
+                job = new Job(jobName, stepName, procStep, program);
+            } else {
+                throw new RuntimeException("Could not evaluate output information");
+            }
+
+            if (averageCount > 1) {
+                String alertJob = "unknown";
+                if (alert.contains("No ALERTS generated today")) {
+                    status = ReportStatus.WITHIN_THE_NORMAL_RANGE;
+                    template = reportTemplate2;
                 } else {
-                    throw new RuntimeException("Could not evaluate output information");
-                }
-
-                if (averageCount > 1) {
-                    String alertJob = "unknown";
-                    if (alert.contains("No ALERTS generated today")) {
-                        status = ReportStatus.WITHIN_THE_NORMAL_RANGE;
-                        template = reportTemplate2;
-                    } else {
-                        Matcher alertMatcher = PATTERN_ALERT.matcher(alert);
-                        if (alertMatcher.find()) {
-                            alertMatcher.find(); //Second match
-                            alertJob = alertMatcher.group(1);
-                            measurement = alertJob;
-                            if (alertJob.contains(job.name)) {
-                                status = ReportStatus.ALERT;
-                                template = reportTemplate3;
-                            } else {
-                                status = ReportStatus.WITHIN_THE_NORMAL_RANGE;
-                                template = reportTemplate2;
-                            }
-                            final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                            String formattedDate = dateFormat.format(new Date());
-                            if (history.contains(formattedDate)) {
-                                template = template.replace("%MAT_MEASUREMENT_ALERT%",
-                                        "PMA generated an alert and MAT measurement was performed");
-                            } else {
-                                template = template.replace("%MAT_MEASUREMENT_ALERT%", " ");
-                            }
+                    Matcher alertMatcher = PATTERN_ALERT.matcher(alert);
+                    if (alertMatcher.find()) {
+                        alertMatcher.find(); //Second match
+                        alertJob = alertMatcher.group(1);
+                        measurement = alertJob;
+                        if (alertJob.contains(job.name)) {
+                            status = ReportStatus.ALERT;
+                            template = reportTemplate3;
                         } else {
-                            throw new RuntimeException("Could not evaluate alert information");
+                            status = ReportStatus.WITHIN_THE_NORMAL_RANGE;
+                            template = reportTemplate2;
                         }
-                    }
-
-                    if ((status != ReportStatus.WARNING) && (status != ReportStatus.ALERT)) {
-                        status = ReportStatus.WITHIN_THE_NORMAL_RANGE;
-                        if (baseline.elapsed <= NORMAL_RANGE_THRESHOLD) {
-                            status = ReportStatus.WARNING;
+                        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                        String formattedDate = dateFormat.format(new Date());
+                        if (history.contains(formattedDate)) {
+                            template = template.replace("%MAT_MEASUREMENT_ALERT%",
+                                    "PMA generated an alert and MAT measurement was performed");
+                        } else {
+                            template = template.replace("%MAT_MEASUREMENT_ALERT%", " ");
                         }
-                        if (baseline.cpu <= NORMAL_RANGE_THRESHOLD) {
-                            status = ReportStatus.WARNING;
-                        }
-                        if (baseline.excp <= NORMAL_RANGE_THRESHOLD) {
-                            status = ReportStatus.WARNING;
-                        }
-                        if (baseline.srvu <= NORMAL_RANGE_THRESHOLD) {
-                            status = ReportStatus.WARNING;
-                        }
-                    }
-                    if (status == ReportStatus.WARNING) {
-                        template = reportTemplate4;
-                    }
-
-                    template = template.replace("%ELP%", baseline.elapsed + "%");
-                    template = template.replace("%ELP_STATUS%", baseline.elapsed <= 0 ? "success" : "failures");
-                    template = template.replace("%CPU%", baseline.cpu + "%");
-                    template = template.replace("%CPU_STATUS%", baseline.cpu <= 0 ? "success" : "failures");
-                    template = template.replace("%EXCP%", baseline.excp + "%");
-                    template = template.replace("%EXCP_STATUS%", baseline.excp <= 0 ? "success" : "failures");
-                    template = template.replace("%SRVU%", baseline.srvu + "%");
-                    template = template.replace("%SRVU_STATUS%", baseline.srvu <= 0 ? "success" : "failures");
-
-                    Matcher previousMatcher = PATTERN_SEC.matcher(performance);
-                    String prefix = "CUR";
-                    while (previousMatcher.find()) {
-                        template = template.replace("%" + prefix + "_DATE%", previousMatcher.group(1));
-                        template = template.replace("%" + prefix + "_TIME%", previousMatcher.group(2));
-                        template = template.replace("%" + prefix + "_CODE%", previousMatcher.group(3));
-                        template = template.replace("%" + prefix + "_SYSTEM%", previousMatcher.group(4));
-                        template = template.replace("%" + prefix + "_ELAPSED%", previousMatcher.group(5));
-                        template = template.replace("%" + prefix + "_CPU%", previousMatcher.group(6));
-                        template = template.replace("%" + prefix + "_EXCP%", previousMatcher.group(7));
-                        template = template.replace("%" + prefix + "_SRVU%", previousMatcher.group(8));
-                        prefix = "PREV";
-                    }
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-                    String reportGenerateTimestamp = sdf.format(new Date());
-                    Matcher avgCalc = PATTERN_AVG_CALC.matcher(performance);
-
-                    if (avgCalc.find()) {
-                        template = template.replace("%AVG_CALCULATION%", avgCalc.group(1));
-                        template = template.replace("%AVG_ELAPSED%", avgCalc.group(2));
-                        template = template.replace("%AVG_CPU%", avgCalc.group(3));
-                        template = template.replace("%AVG_EXCP%", avgCalc.group(4));
-                        template = template.replace("%AVG_SRVU%", avgCalc.group(5));
                     } else {
-                        throw new RuntimeException("Could not evaluate average calculations");
+                        throw new RuntimeException("Could not evaluate alert information");
                     }
-                    template = template.replace("%MEASUREMENT%", measurement);
-                    template = template.replace("%INITIAL_TEST%", status.toString().replaceAll("_", " "));
-                    template = template.replace("%JOBNAME%", job.name);
-                    template = template.replace("%STEPNAME%", job.step);
-                    template = template.replace("%PROCSTEP%", job.proc);
-                    template = template.replace("%PROGRAM%", job.pgmJcl);
-                    template = template.replace("%REPORT_GENERATE_TIMESTAMP%", reportGenerateTimestamp);
-
-                    String subject = "PMA analyser report";
-                    String sender = "noreply@broadcom.com";
-                    String name = "MAT / PMA Jenkins Plugin";
-                    String recipients = getRecipients(jenkinsHome, pipeline);
-                    String className = PMAConfiguration.class.toString().replace("class ", "");
-                    String mailConfig = jenkinsHome + "/" + className + ".xml";
-                    SMTPConfig config = getSMTPConfig(mailConfig);
-                    new EmailSender(config).sendEmail(template, sender, name, subject, recipients,
-                            config.getAdmin().isEmpty() ? null : config.getAdmin(), null);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException("A I/O Exception is thrown while reading the configuration files", e);
-            } catch (AddressException e) {
-                throw new RuntimeException(e);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
+
+                if ((status != ReportStatus.WARNING) && (status != ReportStatus.ALERT)) {
+                    status = ReportStatus.WITHIN_THE_NORMAL_RANGE;
+                    if (baseline.elapsed <= NORMAL_RANGE_THRESHOLD) {
+                        status = ReportStatus.WARNING;
+                    }
+                    if (baseline.cpu <= NORMAL_RANGE_THRESHOLD) {
+                        status = ReportStatus.WARNING;
+                    }
+                    if (baseline.excp <= NORMAL_RANGE_THRESHOLD) {
+                        status = ReportStatus.WARNING;
+                    }
+                    if (baseline.srvu <= NORMAL_RANGE_THRESHOLD) {
+                        status = ReportStatus.WARNING;
+                    }
+                }
+                if (status == ReportStatus.WARNING) {
+                    template = reportTemplate4;
+                }
+
+                template = template.replace("%ELP%", baseline.elapsed + "%");
+                template = template.replace("%ELP_STATUS%", baseline.elapsed <= 0 ? "success" : "failures");
+                template = template.replace("%CPU%", baseline.cpu + "%");
+                template = template.replace("%CPU_STATUS%", baseline.cpu <= 0 ? "success" : "failures");
+                template = template.replace("%EXCP%", baseline.excp + "%");
+                template = template.replace("%EXCP_STATUS%", baseline.excp <= 0 ? "success" : "failures");
+                template = template.replace("%SRVU%", baseline.srvu + "%");
+                template = template.replace("%SRVU_STATUS%", baseline.srvu <= 0 ? "success" : "failures");
+
+                Matcher previousMatcher = PATTERN_SEC.matcher(performance);
+                String prefix = "CUR";
+                while (previousMatcher.find()) {
+                    template = template.replace("%" + prefix + "_DATE%", previousMatcher.group(1));
+                    template = template.replace("%" + prefix + "_TIME%", previousMatcher.group(2));
+                    template = template.replace("%" + prefix + "_CODE%", previousMatcher.group(3));
+                    template = template.replace("%" + prefix + "_SYSTEM%", previousMatcher.group(4));
+                    template = template.replace("%" + prefix + "_ELAPSED%", previousMatcher.group(5));
+                    template = template.replace("%" + prefix + "_CPU%", previousMatcher.group(6));
+                    template = template.replace("%" + prefix + "_EXCP%", previousMatcher.group(7));
+                    template = template.replace("%" + prefix + "_SRVU%", previousMatcher.group(8));
+                    prefix = "PREV";
+                }
+
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                String reportGenerateTimestamp = sdf.format(new Date());
+                Matcher avgCalc = PATTERN_AVG_CALC.matcher(performance);
+
+                if (avgCalc.find()) {
+                    template = template.replace("%AVG_CALCULATION%", avgCalc.group(1));
+                    template = template.replace("%AVG_ELAPSED%", avgCalc.group(2));
+                    template = template.replace("%AVG_CPU%", avgCalc.group(3));
+                    template = template.replace("%AVG_EXCP%", avgCalc.group(4));
+                    template = template.replace("%AVG_SRVU%", avgCalc.group(5));
+                } else {
+                    throw new RuntimeException("Could not evaluate average calculations");
+                }
+                template = template.replace("%MEASUREMENT%", measurement);
+                template = template.replace("%INITIAL_TEST%", status.toString().replaceAll("_", " "));
+                template = template.replace("%JOBNAME%", job.name);
+                template = template.replace("%STEPNAME%", job.step);
+                template = template.replace("%PROCSTEP%", job.proc);
+                template = template.replace("%PROGRAM%", job.pgmJcl);
+                template = template.replace("%REPORT_GENERATE_TIMESTAMP%", reportGenerateTimestamp);
+                return template;
             }
         } else {
             throw new RuntimeException("Could not evaluate average count");
         }
+        throw new RuntimeException("Could not create e-mail template with performance analysis results.");
     }
 
 
@@ -292,68 +267,6 @@ public class PMAReportNotificationHelper {
                 ("report_template_3.html").toURI())), StandardCharsets.UTF_8);
         reportTemplate4 = new String(Files.readAllBytes(Paths.get(PMAReportNotificationHelper.class.getResource
                 ("report_template_4.html").toURI())), StandardCharsets.UTF_8);
-    }
-
-    private SMTPConfig getSMTPConfig(String mailConfig) throws IOException {
-        File emailConfig = new File(mailConfig);
-        if (emailConfig.exists()) {
-            String content = new String(Files.readAllBytes(emailConfig.toPath()), StandardCharsets.UTF_8);
-            Pattern pattern = Pattern.compile("<email>(.*)</email>.*<smtp>(.*)<\\/smtp>.*<port>(.*)<\\/port>",
-                    Pattern.DOTALL);
-            Matcher matcher = pattern.matcher(content);
-            if (matcher.find()) {
-                String admin = matcher.group(1);
-                String hostname = matcher.group(2);
-                String port = matcher.group(3);
-                String auth = "false";
-                if (content.contains("authentication")) {
-                    auth = "true";
-                    pattern = Pattern.compile("<username>(.*)<\\/username>.*<password>(.*)<\\/password>"
-                            , Pattern.DOTALL);
-                    matcher = pattern.matcher(content);
-                    if (matcher.find()) {
-                        String username = matcher.group(2);
-                        String password = matcher.group(3);
-                        return new SMTPConfig(hostname, port, auth, username, password, admin);
-                    }
-                }
-                return new SMTPConfig(hostname, port, auth, admin);
-            }
-            throw new RuntimeException("Could not evaluate SMTP Configuration");
-        } else {
-            throw new RuntimeException("SMTP Configuration not found");
-        }
-    }
-
-    private String getRecipients(String jenkinsHome, String pipeline) throws IOException {
-        String pipelineConfigDir = "/jobs/" + pipeline + "/config.xml";
-        File pipelineConfigFile = new File(jenkinsHome + pipelineConfigDir);
-        String content = new String(Files.readAllBytes(pipelineConfigFile.toPath()), StandardCharsets.UTF_8);
-        if (content.contains("scriptPath")) {
-            Pattern pattern = Pattern.compile("<scriptPath>(.*)</scriptPath>");
-            Matcher matcher = pattern.matcher(content);
-            if (matcher.find()) {
-                String pipelineWorkspaceScript = jenkinsHome + "/workspace/" + pipeline + "/" + matcher.group(1);
-                File script = new File(pipelineWorkspaceScript);
-                if (!script.exists())
-                    throw new RuntimeException("Could not find or access script on " + pipelineWorkspaceScript);
-                String scriptContent = new String(Files.readAllBytes(script.toPath()), StandardCharsets.UTF_8);
-                pattern = Pattern.compile("recipients.*(?:'|(?:&apos;))(.*)(?:'|(?:&apos;))");
-                matcher = pattern.matcher(scriptContent);
-                if (matcher.find()) {
-                    return matcher.group(1);
-                } else {
-                    throw new RuntimeException("Could not evaluate the e-mail recipients on the pipeline script");
-                }
-            }
-        } else {
-            Pattern pattern = Pattern.compile("<recipients>(.*)<\\/recipients>|recipients.*(?:'|(?:&apos;))(.*)(?:'|(?:&apos;))");
-            Matcher matcher = pattern.matcher(content);
-            if (matcher.find()) {
-                return matcher.group(1) == null ? matcher.group(2) : matcher.group(1);
-            }
-        }
-        throw new RuntimeException("Could not evaluate e-mail recipients");
     }
 
     /**

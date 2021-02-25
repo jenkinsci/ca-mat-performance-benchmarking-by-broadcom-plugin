@@ -35,6 +35,7 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.util.ListBoxModel;
+import hudson.util.Secret;
 import jenkins.model.Jenkins;
 import jenkins.util.ProgressiveRendering;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -63,12 +64,6 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
     public String getDescription() {
         return "The CA Endevor profile enables the communication of the plugin with CA Endevor® " +
                 "and enables you to remotely interact with your source code.";
-    }
-
-    @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
     }
 
     @Override
@@ -240,7 +235,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
         /**
          * The password associated with the user.
          */
-        private String password;
+        private Secret password;
         /**
          * The base path.
          */
@@ -267,7 +262,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
          * @param defaultp           whether this is the default profile
          */
         @DataBoundConstructor
-        public AddProfile(String profileName, String hostname, String port, String username, String password,
+        public AddProfile(String profileName, String hostname, String port, String username, Secret password,
                           String protocol, String basePath, boolean rejectUnauthorized, boolean defaultp) {
             super(profileName, defaultp);
             this.hostname = hostname;
@@ -295,7 +290,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
          *
          * @return the password
          */
-        public String getPassword() {
+        public Secret getPassword() {
             return password;
         }
 

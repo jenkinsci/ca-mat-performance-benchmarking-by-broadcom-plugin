@@ -64,12 +64,6 @@ public class CreatePMAProfile extends CreateProfile<CreatePMAProfile.AddProfile>
     }
 
     @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
-    }
-
-    @Override
     public List<AddProfile> getEntries() {
         return getConfig().getEntries();
     }

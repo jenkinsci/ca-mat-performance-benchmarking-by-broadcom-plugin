@@ -25,6 +25,7 @@ package com.ca.mat.application.performance.view;
 
 import hudson.Extension;
 import hudson.model.RootAction;
+import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -117,6 +118,7 @@ public class Root implements RootAction, ModelObjectWithContextMenu {
      * @return the context menu
      */
     public ContextMenu doContextMenu(StaplerRequest request, StaplerResponse response) {
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         ContextMenu menu = new ContextMenu().addAll(getAll());
         menu.items.forEach((item) -> item.url = item.url.replaceAll("/jenkins//jenkins/", "/jenkins/"));
         return menu;

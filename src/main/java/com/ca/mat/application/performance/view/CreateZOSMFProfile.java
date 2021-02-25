@@ -35,6 +35,7 @@ import java.util.concurrent.Callable;
 
 import javax.servlet.ServletException;
 
+import hudson.util.Secret;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
@@ -60,12 +61,6 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
     public String getDescription() {
         return "The z/OSMF profile enables the communication of the plugin with your instance " +
                 "of the IBM z/OS Management Facility.";
-    }
-
-    @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
     }
 
     @Override
@@ -237,7 +232,7 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
         /**
          * The password.
          */
-        private String password;
+        private Secret password;
         /**
          * The base path.
          */
@@ -274,7 +269,7 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
          * @param defaultp           whether this is the default profile
          */
         @DataBoundConstructor
-        public AddProfile(String profileName, String hostname, String port, String username, String password,
+        public AddProfile(String profileName, String hostname, String port, String username, Secret password,
                           String basePath, String encoding, String responseTimeout, boolean rejectUnauthorized,
                           boolean defaultp) {
             super(profileName, defaultp);
@@ -342,7 +337,7 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
          *
          * @return the password
          */
-        public String getPassword() {
+        public Secret getPassword() {
             return password;
         }
 

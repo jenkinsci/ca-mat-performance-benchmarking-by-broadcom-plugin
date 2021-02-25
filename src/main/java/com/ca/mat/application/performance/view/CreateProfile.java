@@ -33,6 +33,7 @@ import com.ca.mat.application.performance.model.EntryAction;
 import com.ca.mat.application.performance.model.UpdateAction;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.verb.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -59,6 +60,7 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
     }
 
     @Override
+    @POST
     public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
         downloadDependencies();
         return super.doConfigSubmit(req);

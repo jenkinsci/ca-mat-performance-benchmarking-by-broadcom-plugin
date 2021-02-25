@@ -30,6 +30,7 @@ package com.ca.mat.application.performance.control.future;
 import com.ca.mat.application.performance.control.annotation.ProfileMapping;
 import com.ca.mat.application.performance.control.build.ZoweCommandLineBuilder;
 import com.ca.mat.application.performance.view.CreateProfile;
+import hudson.util.Secret;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -120,6 +121,9 @@ public abstract class GetProfileList<T extends CreateProfile.AddProfile> impleme
                                                     break;
                                                 case "boolean":
                                                     content = Boolean.parseBoolean(content.toString());
+                                                    break;
+                                                case "hudson.util.Secret":
+                                                    content = Secret.fromString(content.toString());
                                                     break;
                                                 default:
                                                     content = content.toString();

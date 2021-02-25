@@ -40,6 +40,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.verb.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -355,7 +356,9 @@ public abstract class MultipleEntryFields<T> extends PerformanceBenchmarking {
      * @throws ServletException if an error occurs in the application server
      * @throws IOException      if an I/O error occurs
      */
+    @POST
     public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         JSONObject json = req.getSubmittedForm();
         if (json.get("config") instanceof JSONObject) {
             JSONObject config = (JSONObject) json.get("config");

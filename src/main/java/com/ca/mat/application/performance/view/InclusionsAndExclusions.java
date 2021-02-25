@@ -113,12 +113,6 @@ public final class InclusionsAndExclusions extends MultipleEntryFields<Inclusion
     }
 
     @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
-    }
-
-    @Override
     protected boolean invalidEntries() {
         //Updates entries to upper case to avoid mismatch with the return value from mainframe
         for (Entry entry : getEntries()) {
