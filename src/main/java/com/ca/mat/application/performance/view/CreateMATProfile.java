@@ -37,11 +37,7 @@ import hudson.util.Secret;
 import jenkins.model.Jenkins;
 import jenkins.util.ProgressiveRendering;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

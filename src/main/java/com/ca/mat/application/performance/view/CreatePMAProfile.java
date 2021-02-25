@@ -28,28 +28,21 @@
 
 package com.ca.mat.application.performance.view;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
-
 import com.ca.mat.application.performance.control.annotation.Default;
 import com.ca.mat.application.performance.control.annotation.ProfileMapping;
 import com.ca.mat.application.performance.control.future.GetPMAProfileList;
-
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import jenkins.model.Jenkins;
 import jenkins.util.ProgressiveRendering;
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Class to create a PMA profile.

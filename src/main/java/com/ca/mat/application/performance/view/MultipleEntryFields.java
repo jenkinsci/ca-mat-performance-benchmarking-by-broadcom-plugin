@@ -227,16 +227,17 @@ public abstract class MultipleEntryFields<T> extends PerformanceBenchmarking {
      */
     protected class ProgressViewRendering extends ProgressiveRendering {
 
-        @Override
+        @SuppressWarnings("unchecked")
+		@Override
         protected void compute() {
             XmlFile cc = getConfigFile();
-            @SuppressWarnings("unchecked")
             MultipleEntryFields<T> read = null;
             int totalEntries = 0;
             try {
-                if (cc.exists())
+                if (cc.exists()) {
                     read = (MultipleEntryFields<T>) cc.read();
-                 totalEntries = modifiedEntries.size();
+                }
+                totalEntries = modifiedEntries.size();
                 if (totalEntries > 0) {
                     processEntries(modifiedEntries, totalEntries);
                     postProcessEntries();
@@ -265,9 +266,9 @@ public abstract class MultipleEntryFields<T> extends PerformanceBenchmarking {
             Runnable runnable = new ListRetrievable<>(getConfigFile(),
                     MultipleEntryFields.this);
             runnable.run();
-            if (getEntries().size() != size)
+            if (getEntries().size() != size) {
                 errorMessages.add("Please, refresh the page to obtain the latest results.");
-            else if (totalEntries == 0) {
+            } else if (totalEntries == 0) {
                 errorMessages.add("The current state of your configuration:");
             }
         }

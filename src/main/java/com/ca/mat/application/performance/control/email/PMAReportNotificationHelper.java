@@ -116,6 +116,7 @@ public class PMAReportNotificationHelper {
      * Sends the PMA Analysis results to the users on the pipeline.
      *
      * @param output      - the pipeline report output.
+     * @return String     - the e-mail template.
      */
     public String getTemplate(AnalysisOutput output) {
         String performance = output.getPerformance();

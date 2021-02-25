@@ -85,7 +85,8 @@ public class EmailPostBuildAction extends Notifier implements SimpleBuildStep {
                 log.append(System.lineSeparator());
             }
             Pattern pattern = Pattern.compile("Job (.*) completed.*Performance analysis is finished(.*)" +
-                    "Running alert analysis.*Alert analysis is finished(.*)End of performance analysis", Pattern.DOTALL);
+                    "Running alert analysis.*Alert analysis is finished(.*)End of performance analysis",
+                    Pattern.DOTALL);
             Matcher matcher = pattern.matcher(log.toString());
             if (matcher.find()) {
                 String jobname = matcher.group(1);
@@ -101,10 +102,12 @@ public class EmailPostBuildAction extends Notifier implements SimpleBuildStep {
                 }
                 AnalysisOutput analysisOutput = new AnalysisOutput(performance, alert, history);
                 String template = PMAReportNotificationHelper.getInstance().getTemplate(analysisOutput);
-                new PerformanceAnalysisMailSender(recipients, template, true, true, Mailer.descriptor().getCharset()).run(run, listener);
+                new PerformanceAnalysisMailSender(recipients, template, true,
+                        true, Mailer.descriptor().getCharset()).run(run, listener);
 
             } else {
-                listener.getLogger().println("Could not evaluate performance and alert... Skipping e-mail notification.");
+                listener.getLogger().println("Could not evaluate performance and alert... " +
+                        "Skipping e-mail notification.");
             }
         } catch (IOException | URISyntaxException | InterruptedException e) {
             throw new RuntimeException("An internal error occurred while reading the build log", e);

@@ -46,6 +46,7 @@ public class UpdateAction<T> extends EntryAction<T> {
      * The default UpdateAction constructor.
      *
      * @param entry  a program exclusion, program inclusion, zosmf, mat or pma profile
+     * @param oldEntry - the old entry
      * @param fields the fields
      */
     public UpdateAction(T entry, T oldEntry, List<String> fields) {

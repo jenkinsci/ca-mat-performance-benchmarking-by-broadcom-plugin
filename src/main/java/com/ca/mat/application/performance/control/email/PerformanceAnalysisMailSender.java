@@ -9,10 +9,14 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.lang.reflect.Method;
 
+/**
+ * This class uses the MailSender implementation from the Jenkins Mailer Plugin
+ * to send the performance analysis report.
+ */
 public class PerformanceAnalysisMailSender extends MailSender {
 
     /**
-     * The e-mail template
+     * The e-mail template.
      */
     private final String template;
 
@@ -21,7 +25,17 @@ public class PerformanceAnalysisMailSender extends MailSender {
      */
     private static final String CONTENT_TYPE = "text/html; charset=utf-8";
 
-    public PerformanceAnalysisMailSender(String recipients, String template, boolean dontNotifyEveryUnstableBuild, boolean sendToIndividuals, String charset) {
+    /**
+     * The Constructor of PerformanceAnalysisMailSender class.
+     * @param recipients - the e-mail recipients.
+     * @param template - the e-mail template.
+     * @param dontNotifyEveryUnstableBuild - whether it should notify every unstable build.
+     * @param sendToIndividuals - whether the e-mail needs to be sent to the individuals.
+     * @param charset - the e-mail charset.
+     */
+    public PerformanceAnalysisMailSender(String recipients, String template,
+                                         boolean dontNotifyEveryUnstableBuild,
+                                         boolean sendToIndividuals, String charset) {
         super(recipients, dontNotifyEveryUnstableBuild, sendToIndividuals, charset);
         this.template = template;
     }
