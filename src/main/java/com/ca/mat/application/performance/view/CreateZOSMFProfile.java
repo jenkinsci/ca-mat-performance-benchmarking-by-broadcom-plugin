@@ -27,28 +27,22 @@
  */
 package com.ca.mat.application.performance.view;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
-
 import com.ca.mat.application.performance.control.annotation.Default;
 import com.ca.mat.application.performance.control.annotation.ProfileMapping;
 import com.ca.mat.application.performance.control.future.GetZOSMFProfileList;
-
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
+import hudson.util.Secret;
 import jenkins.model.Jenkins;
 import jenkins.util.ProgressiveRendering;
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Create a ZOSMF profile.
@@ -60,12 +54,6 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
     public String getDescription() {
         return "The z/OSMF profile enables the communication of the plugin with your instance " +
                 "of the IBM z/OS Management Facility.";
-    }
-
-    @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
     }
 
     @Override
@@ -237,7 +225,7 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
         /**
          * The password.
          */
-        private String password;
+        private Secret password;
         /**
          * The base path.
          */
@@ -274,7 +262,7 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
          * @param defaultp           whether this is the default profile
          */
         @DataBoundConstructor
-        public AddProfile(String profileName, String hostname, String port, String username, String password,
+        public AddProfile(String profileName, String hostname, String port, String username, Secret password,
                           String basePath, String encoding, String responseTimeout, boolean rejectUnauthorized,
                           boolean defaultp) {
             super(profileName, defaultp);
@@ -342,7 +330,7 @@ public final class CreateZOSMFProfile extends CreateProfile<CreateZOSMFProfile.A
          *
          * @return the password
          */
-        public String getPassword() {
+        public Secret getPassword() {
             return password;
         }
 

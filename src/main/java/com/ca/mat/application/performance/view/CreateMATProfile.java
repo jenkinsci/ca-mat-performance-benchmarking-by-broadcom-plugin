@@ -33,14 +33,11 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.util.ListBoxModel;
+import hudson.util.Secret;
 import jenkins.model.Jenkins;
 import jenkins.util.ProgressiveRendering;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,12 +53,6 @@ public final class CreateMATProfile extends CreateProfile<CreateMATProfile.AddPr
     public String getDescription() {
         return "The CA MAT Analyze profile enables the communication of the plugin with " +
                 "CA Mainframe Application Tuner (CA MAT) that ensures the analysis of the detected performance issue.";
-    }
-
-    @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
     }
 
     @Override
@@ -222,7 +213,7 @@ public final class CreateMATProfile extends CreateProfile<CreateMATProfile.AddPr
         /**
          * The associated password.
          */
-        private String password;
+        private Secret password;
         /**
          * Whether this profile is Zowe discoverable.
          */
@@ -250,7 +241,7 @@ public final class CreateMATProfile extends CreateProfile<CreateMATProfile.AddPr
          */
         @DataBoundConstructor
         public AddProfile(String profileName, String hostname, String protocol, String port,
-                          String username, String password, boolean zowediscoverable, boolean defaultp) {
+                          String username, Secret password, boolean zowediscoverable, boolean defaultp) {
             super(profileName, defaultp);
             this.port = port;
             this.hostname = hostname;
@@ -311,7 +302,7 @@ public final class CreateMATProfile extends CreateProfile<CreateMATProfile.AddPr
          *
          * @return the password
          */
-        public String getPassword() {
+        public Secret getPassword() {
             return password;
         }
 

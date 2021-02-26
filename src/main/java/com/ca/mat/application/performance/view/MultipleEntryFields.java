@@ -40,6 +40,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.verb.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,16 +227,17 @@ public abstract class MultipleEntryFields<T> extends PerformanceBenchmarking {
      */
     protected class ProgressViewRendering extends ProgressiveRendering {
 
-        @Override
+        @SuppressWarnings("unchecked")
+		@Override
         protected void compute() {
             XmlFile cc = getConfigFile();
-            @SuppressWarnings("unchecked")
             MultipleEntryFields<T> read = null;
             int totalEntries = 0;
             try {
-                if (cc.exists())
+                if (cc.exists()) {
                     read = (MultipleEntryFields<T>) cc.read();
-                 totalEntries = modifiedEntries.size();
+                }
+                totalEntries = modifiedEntries.size();
                 if (totalEntries > 0) {
                     processEntries(modifiedEntries, totalEntries);
                     postProcessEntries();
@@ -264,9 +266,9 @@ public abstract class MultipleEntryFields<T> extends PerformanceBenchmarking {
             Runnable runnable = new ListRetrievable<>(getConfigFile(),
                     MultipleEntryFields.this);
             runnable.run();
-            if (getEntries().size() != size)
+            if (getEntries().size() != size) {
                 errorMessages.add("Please, refresh the page to obtain the latest results.");
-            else if (totalEntries == 0) {
+            } else if (totalEntries == 0) {
                 errorMessages.add("The current state of your configuration:");
             }
         }
@@ -355,7 +357,9 @@ public abstract class MultipleEntryFields<T> extends PerformanceBenchmarking {
      * @throws ServletException if an error occurs in the application server
      * @throws IOException      if an I/O error occurs
      */
+    @POST
     public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         JSONObject json = req.getSubmittedForm();
         if (json.get("config") instanceof JSONObject) {
             JSONObject config = (JSONObject) json.get("config");

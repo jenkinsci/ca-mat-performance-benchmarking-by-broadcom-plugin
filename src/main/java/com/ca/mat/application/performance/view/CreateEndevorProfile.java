@@ -35,19 +35,15 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.util.ListBoxModel;
+import hudson.util.Secret;
 import jenkins.model.Jenkins;
 import jenkins.util.ProgressiveRendering;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
-
-import javax.servlet.ServletException;
 
 /**
  * This class represents the create endevor entry on the config UI. It implements, when applicable,
@@ -63,12 +59,6 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
     public String getDescription() {
         return "The CA Endevor profile enables the communication of the plugin with CA Endevor® " +
                 "and enables you to remotely interact with your source code.";
-    }
-
-    @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
     }
 
     @Override
@@ -240,7 +230,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
         /**
          * The password associated with the user.
          */
-        private String password;
+        private Secret password;
         /**
          * The base path.
          */
@@ -267,7 +257,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
          * @param defaultp           whether this is the default profile
          */
         @DataBoundConstructor
-        public AddProfile(String profileName, String hostname, String port, String username, String password,
+        public AddProfile(String profileName, String hostname, String port, String username, Secret password,
                           String protocol, String basePath, boolean rejectUnauthorized, boolean defaultp) {
             super(profileName, defaultp);
             this.hostname = hostname;
@@ -295,7 +285,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
          *
          * @return the password
          */
-        public String getPassword() {
+        public Secret getPassword() {
             return password;
         }
 

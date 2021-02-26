@@ -97,6 +97,7 @@ public abstract class PerformanceBenchmarking implements ExtensionPoint, Action,
      */
     @SuppressWarnings("static-access")
     public void doSourceFile(StaplerRequest req, StaplerResponse rsp) throws IOException {
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         String name = req.getRestOfPath().substring(1); // Remove leading /
         for (SourceFile sf : getSourceFiles()) {
             if (sf.name.equals(name)) {
@@ -195,6 +196,7 @@ public abstract class PerformanceBenchmarking implements ExtensionPoint, Action,
          * @throws IOException if the content cannot be copied
          */
         public void doIndex(StaplerResponse rsp) throws IOException {
+            Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             rsp.setContentType("text/plain;charset=UTF-8");
             copy(resolve().openStream(), rsp.getOutputStream());
         }

@@ -29,8 +29,8 @@ package com.ca.mat.application.performance.view;
 
 import com.ca.mat.application.performance.control.build.ZoweCommandLineBuilder;
 import com.ca.mat.application.performance.control.email.PMAReportNotificationHelper;
+import com.ca.mat.application.performance.control.email.PerformanceAnalysisMailSender;
 import com.ca.mat.application.performance.model.AnalysisOutput;
-import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -38,6 +38,7 @@ import hudson.model.AbstractProject;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.Mailer;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 import jenkins.tasks.SimpleBuildStep;
@@ -75,43 +76,41 @@ public class EmailPostBuildAction extends Notifier implements SimpleBuildStep {
 
     @Override
     public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath filePath,
-                        @Nonnull Launcher launcher, @Nonnull TaskListener listener)
-            throws IOException, InterruptedException {
-        final EnvVars env = run.getEnvironment(listener);
-        String jenkinsHome = env.get("JENKINS_HOME");
-        List<String> logLines = run.getLog(1000);
-        StringBuilder log = new StringBuilder();
-        for (String line : logLines) {
-            log.append(line);
-            log.append(System.lineSeparator());
-        }
-        Pattern pattern = Pattern.compile("Job (.*) completed.*Performance analysis is finished(.*)" +
-                "Running alert analysis.*Alert analysis is finished(.*)End of performance analysis", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(log.toString());
-        if (matcher.find()) {
-            String jobname = matcher.group(1);
-            String performance = matcher.group(2);
-            String alert = matcher.group(3);
-            String history = "unknown";
-            if (!alert.toLowerCase().contains("no alerts generated")) {
-                listener.getLogger().println("Alerts found! Executing MAT History...");
-                listener.getLogger().println("Running measurement history...");
-                String[] parameters = {"mat", "monitor", "history", "--profile", jobname};
-                history = new ZoweCommandLineBuilder().getCommandOutputNoTimeout(parameters);
-                listener.getLogger().println("Measurement history is finished");
+                        @Nonnull Launcher launcher, @Nonnull TaskListener listener) {
+        try {
+            List<String> logLines = run.getLog(1000);
+            StringBuilder log = new StringBuilder();
+            for (String line : logLines) {
+                log.append(line);
+                log.append(System.lineSeparator());
             }
-            listener.getLogger().println("Evaluating SMTP Configuration...");
-            listener.getLogger().println("Sending e-mail...");
-            String pipeline = filePath.getName();
-            AnalysisOutput analysisOutput = new AnalysisOutput(performance, alert, history);
-            try {
-                PMAReportNotificationHelper.getInstance().sendOutputResults(jenkinsHome, analysisOutput, pipeline);
-            } catch (URISyntaxException e) {
-                throw new RuntimeException("Could not send e-mail notification", e);
+            Pattern pattern = Pattern.compile("Job (.*) completed.*Performance analysis is finished(.*)" +
+                    "Running alert analysis.*Alert analysis is finished(.*)End of performance analysis",
+                    Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(log.toString());
+            if (matcher.find()) {
+                String jobname = matcher.group(1);
+                String performance = matcher.group(2);
+                String alert = matcher.group(3);
+                String history = "unknown";
+                if (!alert.toLowerCase().contains("no alerts generated")) {
+                    listener.getLogger().println("Alerts found! Executing MAT History...");
+                    listener.getLogger().println("Running measurement history...");
+                    String[] parameters = {"mat", "monitor", "history", "--profile", jobname};
+                    history = new ZoweCommandLineBuilder().getCommandOutputNoTimeout(parameters);
+                    listener.getLogger().println("Measurement history is finished");
+                }
+                AnalysisOutput analysisOutput = new AnalysisOutput(performance, alert, history);
+                String template = PMAReportNotificationHelper.getInstance().getTemplate(analysisOutput);
+                new PerformanceAnalysisMailSender(recipients, template, true,
+                        true, Mailer.descriptor().getCharset()).run(run, listener);
+
+            } else {
+                listener.getLogger().println("Could not evaluate performance and alert... " +
+                        "Skipping e-mail notification.");
             }
-            listener.getLogger().println("PMA Report is sent.");
-        } else {
-            listener.getLogger().println("Could not evaluate performance and alert... Skipping e-mail notification.");
+        } catch (IOException | URISyntaxException | InterruptedException e) {
+            throw new RuntimeException("An internal error occurred while reading the build log", e);
         }
     }
 

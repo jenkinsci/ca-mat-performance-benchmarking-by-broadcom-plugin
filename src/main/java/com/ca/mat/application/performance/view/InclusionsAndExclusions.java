@@ -28,28 +28,21 @@
 
 package com.ca.mat.application.performance.view;
 
-import java.io.IOException;
+import com.ca.mat.application.performance.control.future.GetListExclusionTask;
+import com.ca.mat.application.performance.control.future.GetListInclusionsTask;
+import com.ca.mat.application.performance.model.EntryAction;
+import com.ca.mat.application.performance.model.UpdateAction;
+import hudson.Extension;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import jenkins.util.ProgressiveRendering;
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-
-import javax.servlet.ServletException;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
-
-import com.ca.mat.application.performance.control.future.GetListExclusionTask;
-import com.ca.mat.application.performance.control.future.GetListInclusionsTask;
-import com.ca.mat.application.performance.model.EntryAction;
-import com.ca.mat.application.performance.model.UpdateAction;
-
-import hudson.Extension;
-import hudson.model.AbstractDescribableImpl;
-import hudson.model.Descriptor;
-import jenkins.util.ProgressiveRendering;
 
 /**
  * PMA Inclusions and Exclusions.
@@ -110,12 +103,6 @@ public final class InclusionsAndExclusions extends MultipleEntryFields<Inclusion
     @Override
     protected void setConfig(MultipleEntryFields<Entry> read) {
         config = ((InclusionsAndExclusions) read).getConfig();
-    }
-
-    @Override
-    public synchronized HttpResponse doConfigSubmit(StaplerRequest req) throws ServletException, IOException {
-        config = null;
-        return super.doConfigSubmit(req);
     }
 
     @Override
