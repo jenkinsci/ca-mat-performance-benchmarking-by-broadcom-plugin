@@ -115,7 +115,7 @@ A new entry with the CA MAT Analyze profile fields appears.
    * **Username**  
    Specify your mainframe username.  
    * **Password**  
-   Specify your mainframe username.  
+   Specify your mainframe password.  
    * **Zowe Discoverable**  
    Select this option only if you have the Zowe API Mediation Layer properties configured in your CA MAT REST API server settings.  
    * **Default Profile**  
@@ -171,7 +171,7 @@ The z/OSMF profile enables the communication of the plugin with your instance of
 
 **Follow these steps:**   
 1. In the Configure Performance Benchmarking window, click **Define the z/OSMF Profile**.  
-The **Define the CA MAT z/OSMF Profile** page opens. The page contains the list of all available z/OSMF profiles.
+The **Define the z/OSMF Profile** page opens. The page contains the list of all available z/OSMF profiles.
 
 2. In the **Entries** section, click **Add** and select **z/OSMF Profile**.  
 A new entry with the z/OSMF profile fields appears.
@@ -187,7 +187,7 @@ A new entry with the z/OSMF profile fields appears.
    * **Username**  
    Provide your mainframe (z/OSMF) user name, which can be the same as your TSO login.  
    * **Password**  
-   Provide your mainframe (z/OSMF) user name, which can be the same as your TSO password.  
+   Provide your mainframe (z/OSMF) password, which can be the same as your TSO password.  
    * **Reject Unauthorized**  
    Select this option to reject self-signed certificates.  
    * **Base Path**  
@@ -331,7 +331,7 @@ The Jenkins system configuration window opens.
    * **Use SSL**  
    Select this option to use SSL for connecting to the SMTP server.  
    * **Charset**  
-   Define the charset for your e-mails, for example, UTF-8.
+   Define the charset for your emails, for example, UTF-8.
    * If your environment requires SMTP authentication, select the **Use SMTP Authentication** option and specify the following parameters:  
      * **Username**  
         Provide the username for your SMTP server.  
@@ -472,7 +472,7 @@ You can configure your Jenkins pipeline with another project type called **Pipel
 - Performance benchmarking  
 - Sending email notifications  
 
-The following example of the script employs the pre-defined classes to perform the CA MAT Performance Benchmarking functionality on the job TEST.POC.JCLLIB(TESTCICD) compiling all elements that reside in the TESTCICD CA Endevor® sandbox, and sends email notifications to the specified recipient:  
+The following example of the script employs the pre-defined classes to perform the CA MAT Performance Benchmarking functionality on the job TEST.POC.JCLLIB(TESTCICD) compiling all elements that reside in the TESTCICD sandbox of CA Endevor®, and sends email notifications to the specified recipient:  
 
 ```
 pipeline {
@@ -554,7 +554,7 @@ You can access the performance analysis results in the following locations:
 
 
 ### Pipeline Build Log
-You can view a simplified performance benchmarking report for a job in the Jenkins pipeline build log. To access the log, click the build number in the **Build History** section of the pipeline, then click **Console Output**.  
+You can view a simplified performance benchmarking report for a job in the Jenkins pipeline build log. To access the log, click the build number in the **Build History** section of the pipeline details window, then click **Console Output**.  
 
 The log displays the job details and measurement results for the key performance metrics as follows:
 
@@ -594,7 +594,7 @@ In this example, the plugin compares the KPIs of the current run of job TESTCICD
 The output log also provides information about all performance alerts raised today for the tested job.  
 
 ### Performance Benchmarking Reports
-With the configured SMTP server and with the recipient emails for performance benchmarking reports defined for the specific pipeline, the plugin sends email notifications with performance analysis results of the tested job after a successful execution of the Performance benchmarking step.  
+With the configured SMTP server details and with the recipient emails for performance benchmarking reports defined in the pipeline, the plugin sends email notifications with performance analysis results of the tested job after a successful execution of the Performance benchmarking step.  
 
 The email notification contains the subject **PMA Analyser Report** and the **Overall test status** heading within the message body followed by one of the possible results. Depending on the performance benchmarking results, you can receive 4 types of email notifications:  
 
