@@ -95,6 +95,13 @@
             </resource>
         </resources>
     </build>
+	
+	<scm>
+		<connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+		<url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+		<tag>HEAD</tag>
+	</scm>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
