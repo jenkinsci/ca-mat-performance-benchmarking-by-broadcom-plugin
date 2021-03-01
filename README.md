@@ -43,22 +43,22 @@ Before you install the CA MAT Performance Benchmarking plugin by Broadcom, verif
 
 - Jenkins is installed and configured on your machine.  
 - The minimun Java version supported by Jenkins is installed on your Jenkins machine.  
--	CA Mainframe Application Tuner (CA MAT) version 12.0.02 (GA) or later is installed.  
--	CA MAT customization is successfully completed.  
--	CA MAT database integration is enabled and configured.  
--	CA MAT REST API is installed and configured.  
--	PMA customization is successfully completed.  
--	z/OSMF is installed and configured.  
+- CA Mainframe Application Tuner (CA MAT) version 12.0.02 (GA) or later is installed.  
+- CA MAT customization is successfully completed.  
+- CA MAT database integration is enabled and configured.  
+- CA MAT REST API is installed and configured.  
+- PMA customization is successfully completed.  
+- z/OSMF is installed and configured.  
 
 Optionally, CA Endevor® SCM users can automate the compilation process of updated source code from the specific sandbox directly from the Jenkins pipeline. To leverage this automation, meet the following prerequisites:  
 
 - CA Endevor® version 18.1 or later installed and configured.  
--	CA Endevor® Web Services installed and configured.  
+- CA Endevor® Web Services installed and configured.  
 
 For detailed information, refer to the respective sections of the  the [CA Mainframe Application Tuner (CA MAT)](http://techdocs.broadcom.com/mat) and [CA Endevor®](http://techdocs.broadcom.com/endevor) documentation.  
 
 # Installing
-Install the CA MAT Performance Benchmarking plugin by Broadcom using the Jenkins plugin management functionality. For more information, see [Managing Plugins](https://www.jenkins.io/doc/book/managing/plugins/) in the Jenkins documentation.
+Install the CA MAT Performance Benchmarking plugin by Broadcom using the Jenkins plugin management facility. For more information, see [Managing Plugins](https://www.jenkins.io/doc/book/managing/plugins/) in the Jenkins documentation.
   
 ## Automated Component Installation
 Along with the CA MAT Performance Benchmarking plugin by Broadcom, the plugin installation procedure automatically installs on your Jenkins machine the latest versions of the following components:  
@@ -143,18 +143,18 @@ A new entry with the CA MAT Detect profile fields appears.
 3. Provide values for the following fields:  
    * **Profile Name**  
    Specify the name of your CA MAT Detect profile that you create, for example, PMAPROF1.  
-   *	**Job Account Number**  
+   * **Job Account Number**  
    Specify your z/OS TSO/E account information. Only numbers are allowed. For example, 123456789.  
-   *	**Job Class**  
+   * **Job Class**  
    Specify your z/OS class information. Allowed values: alphanumeric characters (A-Z, 0-9). For example, A.  
-   *	**Message Class**  
+   * **Message Class**  
    Specify the MSGCLASS parameter value to be assigned to the output class in the job log. The specified MSGCLASS value is used in all JCLs that PMA runs while you execute the commands. Values: alphanumeric characters (A-Z, 0-9). For example, A.  
    Default: A.  
-   *	**Load Library**  
+   * **Load Library**  
    Specify PMA loadlib information. To provide the loadlib name, refer to your PMA installation details (*&HLQ*.CEETLOAD).  
-   *	**PMA HLQ**  
+   * **PMA HLQ**  
    Specify the PMA high-level qualifier to access the KSDSALT, KSDSJOB, and KSDSEXC VSAM files to collect the necessary data. For example, PMA.V12.  
-   *	**Default Profile**  
+   * **Default Profile**  
    Select this option to set the profile as default.
 
 4. Click **Save** to apply all changes.  
@@ -260,12 +260,13 @@ To define the monitoring scope, you include specific jobs or groups of jobs and 
 **Follow these steps:**   
 1. In the Configure Performance Benchmarking window, click **Define the Monitoring Scope**.  
 The **Define the Monitoring Scope** page opens.  
-**Note:** When you access or update the Define the Monitoring Scope page, the plugin communicates with mainframe to retrieve the current monitoring scope details. The retrieval process may take time depending on your connection and mainframe response speed. The progress bar above the **Entries** section indicates the current status of data retrieval. Please wait for the process to complete before you update the monitoring scope details.
+  
+    **Note:** When you access or update the Define the Monitoring Scope page, the plugin communicates with mainframe to retrieve the current monitoring scope details. The retrieval process may take time depending on your connection and mainframe response speed. The progress bar above the **Entries** section indicates the current status of data retrieval. Please wait for the process to complete before you update the monitoring scope details.
 
 2. In the **Entries** section, click **Add**, and select one of the scope definition entry types:  
 * **Job Inclusion**  
    Specify the mandatory parameters of the job that you want to specifically include in the monitoring scope:  
-      * **Job Name**  
+    * **Job Name**  
       Provide the name of the job that you want to include in the monitoring scope, for example, ABCJOB. The maximum length is 8 characters.  
       You can use wildcard characters * and _ to define an inclusion pattern for the job names.  
       Examples:  
@@ -274,30 +275,30 @@ The **Define the Monitoring Scope** page opens.
         - Specify **\_TEST*** to include all job names that contain TEST.    
               
     Click **Advanced** to optionally specify additional parameters of the included job:  
-      *	**Step Name**  
-      Specify the step name of the job.  
-      The maximum length is 8 characters. The Step Name field supports the same use of wildcards as the Job name.  
-      *	**Proc Step**  
-      Specify the procedure step of the job.  
-      The maximum length is 8 characters. The Proc Step field supports the same use of wildcards as the Job name.  
-      *	**Description**  
-      Provide a description of the included job, for example, *Test job included*.  
-      The maximum length is 24 characters.  
-      The description that you provide appears in the inclusion entry in PMA.      
+    * **Step Name**  
+    Specify the step name of the job.  
+    The maximum length is 8 characters. The Step Name field supports the same use of wildcards as the Job name.  
+    * **Proc Step**  
+    Specify the procedure step of the job.  
+    The maximum length is 8 characters. The Proc Step field supports the same use of wildcards as the Job name.  
+    * **Description**  
+    Provide a description of the included job, for example, *Test job included*.  
+    The maximum length is 24 characters.  
+    The description that you provide appears in the inclusion entry in PMA.      
    
 * **Program Exclusion**  
    Specify the mandatory parameters of the program that you want to specifically exclude from the monitoring scope:  
-      *	**Program Name**  
+    * **Program Name**  
       Provide the name of the program that you want to exclude from the monitoring scope, for example, ABCPGM. The maximum length is 8 characters.  
       You can use wildcard characters * and _ to define an exclusion pattern for the program names.  
       Examples:  
-          - Specify **TEST*** to exclude all program names that start with TEST.  
-          -	Specify **\_TEST** to exclude all program names that end with TEST.  
-          -	Specify **\_TEST*** to exclude all program names that contain TEST.  
-      
+        - Specify **TEST*** to exclude all program names that start with TEST.  
+        - Specify **\_TEST** to exclude all program names that end with TEST.  
+        - Specify **\_TEST*** to exclude all program names that contain TEST.    
+       
     Click **Advanced** to specify optional parameters of the excluded program:  
-      * **Description**  
-      Provide a description of the excluded program, for example, *Backup program excluded*. The maximum length is 24 characters.
+    * **Description**  
+    Provide a description of the excluded program, for example, *Backup program excluded*. The maximum length is 24 characters.
 The description that you provide appears in the exclusion entry in PMA.   
 
 3. Confirm the changes using one of the following options:  
@@ -320,7 +321,7 @@ To enable the emailing facility for the CA MAT Performance Benchmarking plugin b
 1. In the main Jenkins menu, click **Manage Jenkins**, then click **Configure System**.  
 The Jenkins system configuration window opens.  
 
-2. Navigate to the **Jenkins Location** section and specify an email address to be used as a sender in the **System Admin e-mail address** field, for example, admin@example.com.
+2. Navigate to the **Jenkins Location** section and specify an email address to be used as a sender in the **System Admin e-mail address** field.
 
 3. Navigate to the **E-mail Notification** section and provide your SMTP server details:  
    * **SMTP Server**  
@@ -332,9 +333,9 @@ The Jenkins system configuration window opens.
    * **Charset**  
    Define the charset for your e-mails, for example, UTF-8.
    * If your environment requires SMTP authentication, select the **Use SMTP Authentication** option and specify the following parameters:  
-      *	**Username**  
+     * **Username**  
         Provide the username for your SMTP server.  
-     *	**Password**  
+     * **Password**  
         Provide the password for your SMTP server.  
     
     **Note:** For more information about the SMTP parameters, refer to the Jenkins Mailer Plugin documentation.
@@ -349,7 +350,7 @@ To configure sending performance benchmarking reports to specific pipeline users
 # Using the Plugin  
 The CA MAT Performance Benchmarking plugin by Broadcom enables you to integrate a comprehensive performance analysis of your mainframe job in the build stage of your Jenkins pipeline.  
 
-To integrate performance benchmarking using the Jenkins UI, you create and configure a **Freestyle** pipeline. Alternatively, you can use the **Pipeline** type to manually insert a script that performs the same performance benchmarking functionality.  
+To integrate performance benchmarking using the Jenkins UI, you create and configure a **Freestyle** pipeline. Alternatively, you can use the **Pipeline** type to manually insert a script that ensures the same performance benchmarking functionality.  
 
 The analysis starts when you commit a source code change in your SCM, which triggers the Jenkins pipeline. Within the build stage of the pipeline, you specify the compilation step details that are associated with the SCM where you update your source code, and specify the mainframe job for performance benchmarking. During the pipeline execution, the CA MAT Performance Benchmarking plugin by Broadcom measures the performance of your updated mainframe job, analyzes the results, and sends email notifications with the performance benchmarking reports to the intended recipients.  
 
@@ -396,19 +397,19 @@ Provide values for the following parameters:
    You can specify several comma-separated elements within the sandbox, for example, RUNCOB01, RUNCOB02.  
    You can use wildcard characters * and % to define name patterns for the element names.  
    Examples:  
-          - Specify * to include all elements from the sandbox in the autogeneration process.  
-          - Specify **RUNCOB*** to include all element names that start with RUNCOB.  
-          - Specify **%%%COB** to include element names that contain the substring COB starting after position three.        
-   * **Environment**  
-   Provide the environment for the CA Endevor® sandbox that you want to include in the autogeneration process, for example, DEV.  
-   * **System**  
-   Provide the system name for the environment in your CA Endevor® sandbox that you want to include in the autogeneration process, for example, APCTTC0.  
-   * **Subystem**  
-   Provide the subsystem name for the environment in your CA Endevor® sandbox that you want to include in the autogeneration process, for example, TESTCICD.  
-   * **Stage**  
-   Specify the environment stage in your CA Endevor® that you want to include in the autogeneration process, for example, 1.  
-   * **Instance**  
-   Specify the instance name of the Endevor environment that is associated with CA Endevor® Web services, for example, WEBSMFNE. For more information, refer to the [CA Endevor®](http://techdocs.broadcom.com/endevor) documentation.  
+     - Specify * to include all elements from the sandbox in the autogeneration process.  
+     - Specify **RUNCOB*** to include all element names that start with RUNCOB.  
+     - Specify **%%%COB** to include element names that contain the substring COB starting after position three.  
+    * **Environment**  
+    Provide the environment for the CA Endevor® sandbox that you want to include in the autogeneration process, for example, DEV.  
+    * **System**  
+    Provide the system name for the environment in your CA Endevor® sandbox that you want to include in the autogeneration process, for example, APCTTC0.  
+    * **Subystem**  
+    Provide the subsystem name for the environment in your CA Endevor® sandbox that you want to include in the autogeneration process, for example, TESTCICD.  
+    * **Stage**  
+    Specify the environment stage in your CA Endevor® that you want to include in the autogeneration process, for example, 1.  
+    * **Instance**  
+    Specify the instance name of the Endevor environment that is associated with CA Endevor® Web services, for example, WEBSMFNE. For more information, refer to the [CA Endevor®](http://techdocs.broadcom.com/endevor) documentation.  
   
 3. (Optional) Select option **Override signout** to work with elements that might be currently used by another user.  
 Select the Override signout option only if you have the permission to override the signout of another user. 
@@ -476,29 +477,29 @@ The following example of the script employs the pre-defined classes to perform t
 ```
 pipeline {
     agent {
-		label 'master'
-	}
-	stages {
-		stage('Autogen compilation job') {
+	label 'master'
+    }
+    stages {
+	stage('Autogen compilation job') {
             steps {
                 step([$class: 'Autogen', element: '*', environment: 'dev', 
                 system: 'APCTTC0', subsystem: 'TESTCICD', stage: '1',
                 instance: 'WEBSMFNE', signout: true])
             }
-	    }
-	    stage('Performance Benchmarking') {
+	}
+	stage('Performance Benchmarking') {
             steps {
                 step([$class: 'PerformanceAnalysisBuilder', 
                 testjob: 'TEST.POC.JCLLIB(TESTCICD)'])
             }
-	    }
+	}
     }
     post {
-		// Send email notification
-		always {
-		        step([$class: 'EmailPostBuildAction',
-		        recipients: 'user1@example.com'])
-		}
+	// Send email notification
+	always {
+		step([$class: 'EmailPostBuildAction',
+		recipients: 'user1@example.com'])
+	}
     }
 }
 ```  
