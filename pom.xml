@@ -41,7 +41,7 @@
 
     <groupId>com.ca.broadcom.plugins</groupId>
     <artifactId>ca-mat-performance-benchmarking-by-broadcom</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>CA MAT Performance Benchmarking by Broadcom</name>
