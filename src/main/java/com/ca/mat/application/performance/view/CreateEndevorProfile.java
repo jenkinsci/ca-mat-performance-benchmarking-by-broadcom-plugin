@@ -192,9 +192,8 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
         }
 
         /**
-         * Get the configuration entries.
+         * The class descriptor.
          *
-         * @return the configuration entries
          */
         @Extension
         public static class DescriptorImpl extends Descriptor<CreateEndevorProfile.Config> {

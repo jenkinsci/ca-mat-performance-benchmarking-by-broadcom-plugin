@@ -246,9 +246,6 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
 
     /**
      * This method downloads and installs the latest version of the zowe cli, if not installed in the computer.
-     *
-     * @throws IOException          if an I/O error occurs
-     * @throws InterruptedException if a network interception occurs
      */
     protected void downloadZoweCLI() {
         String cli = "zowe";
@@ -274,8 +271,6 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
      * if not installed in the computer.
      * *** being the getPluginCmd(). E.g.; endevor, mat, pma...
      *
-     * @throws IOException          if an I/O error occurs
-     * @throws InterruptedException if a network interception occurs
      */
     protected void downloadDependencies() {
         downloadZoweCLI();
