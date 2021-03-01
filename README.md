@@ -23,6 +23,7 @@ Table of Contents
     * [Define the Compilation Step Details](#define-the-compilation-step-details)
     * [Specify the Job for Performance Benchmarking](#specify-the-job-for-performance-benchmarking)
     * [Define Recipients of Performance Benchmarking Reports](#define-recipients-of-performance-benchmarking-reports)
+    * [Pipeline Script](#pipeline-script)
   * [Execute the Pipeline](#execute-the-pipeline)
   * [Review Performance Benchmarking Results](#review-performance-benchmarking-results)
     * [Pipeline Build Log](#pipeline-build-log)
@@ -64,8 +65,9 @@ Along with the CA MAT Performance Benchmarking plugin by Broadcom, the plugin in
 
 - Zowe CLI  
 - CA MAT Detect plug-in for Zowe CLI  
--	CA MAT Analyze plug-in for Zowe CLI  
+- CA MAT Analyze plug-in for Zowe CLI  
 - CA Endevor SCM plug-in for Zowe CLI  
+- Jenkins Mailer plug-in
 
 The above listed components are required for the operation of the CA MAT Performance Benchmarking plugin by Broadcom.
 
@@ -77,7 +79,7 @@ If some of the required components are already installed on your Jenkins machine
 - CA MAT Analyze plug-in for Zowe CLI  - version 1.0.2  
 - CA Endevor SCM plug-in for Zowe CLI  - version 5.7.2  
 
-After the successful installation of the CA MAT Performance Benchmarking plugin by Broadcom, the **Performance Benchmarking** option appears in the main Jenkins menu. By clicking the Performance Benchmarking option, you access the Configure Performance Benchmarking page. When you enter the Performance Benchmarking page, the plugin re-verifies whether you have all the necessary components installed. 
+After the successful installation of the CA MAT Performance Benchmarking plugin by Broadcom, the **Performance Benchmarking** option appears in the main Jenkins menu. By clicking the Performance Benchmarking option, you access the Configure Performance Benchmarking page. When you enter the Performance Benchmarking page, the plugin reverifies whether you have all the necessary components installed. 
 
 
 # Configure the Plugin
@@ -110,13 +112,13 @@ A new entry with the CA MAT Analyze profile fields appears.
    Specify the name or IP address that you defined for your CA MAT REST API server, for example, 127.0.0.0 or localhost. 
    * **Port Number**  
    Provide the port number that you defined for your CA MAT REST API server, for example, 8080.  
-   *	**Username**  
+   * **Username**  
    Specify your mainframe username.  
-   *	**Password**  
+   * **Password**  
    Specify your mainframe username.  
-   *	**Zowe Discoverable**  
+   * **Zowe Discoverable**  
    Select this option only if you have the Zowe API Mediation Layer properties configured in your CA MAT REST API server settings.  
-   *	**Default Profile**  
+   * **Default Profile**  
    Select this option to set the profile as default.
 
 4. Click **Save** to apply all changes.  
@@ -177,25 +179,25 @@ A new entry with the z/OSMF profile fields appears.
 3. Provide values for the following fields:  
    * **Profile Name**  
    Specify the name of your z/OSMF profile that you create, for example, ZOSPROF1.  
-   *	**Host Name**  
+   * **Host Name**  
    Specify your z/OSMF server host name, for example, myhost.com.  
-   *	**Port Number**  
+   * **Port Number**  
    Specify your z/OSMF server port number, for example, 443.  
    Default: 443.  
-   *	**Username**  
+   * **Username**  
    Provide your mainframe (z/OSMF) user name, which can be the same as your TSO login.  
-   *	**Password**  
+   * **Password**  
    Provide your mainframe (z/OSMF) user name, which can be the same as your TSO password.  
-   *	**Reject Unauthorized**  
+   * **Reject Unauthorized**  
    Select this option to reject self-signed certificates.  
-   *	**Base Path**  
+   * **Base Path**  
    Specify the base path for your API mediation layer instance. Specify this option to prepend the base path to all z/OSMF resources when making REST requests.  
    Leave blank if you are not using an API mediation layer.  
-   *	**Encoding**  
+   * **Encoding**  
   (Optional) Specify encoding for download and upload of z/OS data sets and USS files. If not specified, the default encoding is 1047.  
-   *	**Response Timeout**  
+   * **Response Timeout**  
    (Optional) Specify the maximum amount of time in seconds the z/OSMF Files TSO servlet should run before returning a response. Any request exceeding this amount of time will be terminated and return an error. Allowed values: 5 - 600.  
-   *	**Default Profile**  
+   * **Default Profile**  
    Select this option to set the profile as default.  
 
 4. Click **Save** to apply all changes.  
@@ -226,16 +228,16 @@ A new entry with the CA Endevor profile fields appears.
    Specify the host name for your CA Endevor® Web services server, for example, endevorhost.com. 
    * **Port Number**  
    Specify your CA Endevor® Web services server port number, for example, 8080.  
-   *	**Username**  
+   * **Username**  
    Specify your username for Endevor session.  
-   *	**Password**  
+   * **Password**  
    Specify the password for your Endevor session.  
-   *	**Base Path**  
+   * **Base Path**  
    Specify the base path for connecting to CA Endevor® REST API.  
    Default: EndevorService/rest
-   *	**Reject Unauthorized**  
+   * **Reject Unauthorized**  
    Select this option to reject self-signed certificates.  
-   *	**Default Profile**  
+   * **Default Profile**  
    Select this option to set the profile as default.
 
 4. Click **Save** to apply all changes.  
@@ -261,15 +263,15 @@ The **Define the Monitoring Scope** page opens.
 **Note:** When you access or update the Define the Monitoring Scope page, the plugin communicates with mainframe to retrieve the current monitoring scope details. The retrieval process may take time depending on your connection and mainframe response speed. The progress bar above the **Entries** section indicates the current status of data retrieval. Please wait for the process to complete before you update the monitoring scope details.
 
 2. In the **Entries** section, click **Add**, and select one of the scope definition entry types:  
-*	**Job Inclusion**  
+* **Job Inclusion**  
    Specify the mandatory parameters of the job that you want to specifically include in the monitoring scope:  
       * **Job Name**  
       Provide the name of the job that you want to include in the monitoring scope, for example, ABCJOB. The maximum length is 8 characters.  
       You can use wildcard characters * and _ to define an inclusion pattern for the job names.  
       Examples:  
-        -	Specify **TEST*** to include all job names that start with TEST.  
-        -	Specify **\_TEST** to include all job names that end with TEST.  
-        -	Specify **\_TEST*** to include all job names that contain TEST.    
+        - Specify **TEST*** to include all job names that start with TEST.  
+        - Specify **\_TEST** to include all job names that end with TEST.  
+        - Specify **\_TEST*** to include all job names that contain TEST.    
               
     Click **Advanced** to optionally specify additional parameters of the included job:  
       *	**Step Name**  
@@ -283,7 +285,7 @@ The **Define the Monitoring Scope** page opens.
       The maximum length is 24 characters.  
       The description that you provide appears in the inclusion entry in PMA.      
    
-*	**Program Exclusion**  
+* **Program Exclusion**  
    Specify the mandatory parameters of the program that you want to specifically exclude from the monitoring scope:  
       *	**Program Name**  
       Provide the name of the program that you want to exclude from the monitoring scope, for example, ABCPGM. The maximum length is 8 characters.  
@@ -300,7 +302,7 @@ The description that you provide appears in the exclusion entry in PMA.
 
 3. Confirm the changes using one of the following options:  
    * Click **Save** to save all changes and exit.  
-   *	Click **Apply** to save all changes and stay on the page.  
+   * Click **Apply** to save all changes and stay on the page.  
 
 You have defined the general scope of jobs to be monitored. You can define multiple entries for included jobs and excluded programs.  
 
@@ -310,45 +312,44 @@ From the resulting scope, you add the specific job that you want to test for per
 
 
 # Configure Email Notifications
-The CA MAT Performance Benchmarking plugin by Broadcom enables you to configure email notifications for the following user types:  
-* **Pipeline user**  
-Receives email notifications with the performance analysis report for the tested job after a successful pipeline execution.    
-* **Jenkins administrator**  
-  *	Manages the emailing facility using the SMTP server settings.  
-  *	If a pipeline user email is provided in a pipeine, Jenkins administrator automatically receives the performance benchmarking email report in a copy.
-
-
-To enable the emailing facility for the CA MAT Performance Benchmarking plugin by Broadcom, configure the details of your SMTP server and define an administrator email.  
+The CA MAT Performance Benchmarking plugin by Broadcom enables you to configure email notifications and obtain performance analysis reports for the tested job after a successful pipeline execution. The emailing facility is ensured by Jenkins Mailer plugin. You get the plugin automatically when you install the CA MAT Performance Benchmarking plugin by Broadcom.  
+  
+To enable the emailing facility for the CA MAT Performance Benchmarking plugin by Broadcom, configure the details of your SMTP server and define a system administrator email address.  
 
 **Follow these steps:**  
-1. In the main Jenkins menu, click **Manage Jenkins**, then click **Configure system**.  
+1. In the main Jenkins menu, click **Manage Jenkins**, then click **Configure System**.  
 The Jenkins system configuration window opens.  
 
-2. Navigate to the **Configure email notifications for CA MAT Performance Benchmarking by Broadcom** section and provide values for the following fields:  
-   * **Administrator Email**  
-   Specify the email address of the Jenkins administrator.  
-   You can provide several comma-separated email addresses.  
-   *	**SMTP Server**  
+2. Navigate to the **Jenkins Location** section and specify an email address to be used as a sender in the **System Admin e-mail address** field, for example, admin@example.com.
+
+3. Navigate to the **E-mail Notification** section and provide your SMTP server details:  
+   * **SMTP Server**  
    Specify SMTP server to be used for sending email notifications, for example, smtp.example.com.  
-   *	**SMTP Port**  
-   Specify the port number on the SMTP server, for example, 25.  
-   *	**SMTP Authentication**  
-   (Optional) Select this option to define SMTP authentication for the server.  
-   If selected, specify values for the following additional fields that appear:  
-     *	**Username**  
-     Provide the username for your SMTP server.  
+   * **SMTP Port**  
+   Specify the port number for the SMTP server, for example, 25.  
+   * **Use SSL**  
+   Select this option to use SSL for connecting to the SMTP server.  
+   * **Charset**  
+   Define the charset for your e-mails, for example, UTF-8.
+   * If your environment requires SMTP authentication, select the **Use SMTP Authentication** option and specify the following parameters:  
+      *	**Username**  
+        Provide the username for your SMTP server.  
      *	**Password**  
-     Provide the password for your SMTP server.  
-  
-3. Click **Save** to apply all changes.
+        Provide the password for your SMTP server.  
+    
+    **Note:** For more information about the SMTP parameters, refer to the Jenkins Mailer Plugin documentation.
+ 
+4. Click **Save** to apply all changes.
            
-You have configured the CA MAT Performance Benchmarking plugin by Broadcom to send email notifications and defined the administrator email address.  
+You have configured the CA MAT Performance Benchmarking plugin by Broadcom to send email notifications.  
   
 To configure sending performance benchmarking reports to specific pipeline users, you define the recipient emails in the **Post-build Actions** stage while configuring a particular pipeline. For more information, see [Using the Plugin](#using-the-plugin).
  
 
 # Using the Plugin  
 The CA MAT Performance Benchmarking plugin by Broadcom enables you to integrate a comprehensive performance analysis of your mainframe job in the build stage of your Jenkins pipeline.  
+
+To integrate performance benchmarking using the Jenkins UI, you create and configure a **Freestyle** pipeline. Alternatively, you can use the **Pipeline** type to manually insert a script that performs the same performance benchmarking functionality.  
 
 The analysis starts when you commit a source code change in your SCM, which triggers the Jenkins pipeline. Within the build stage of the pipeline, you specify the compilation step details that are associated with the SCM where you update your source code, and specify the mainframe job for performance benchmarking. During the pipeline execution, the CA MAT Performance Benchmarking plugin by Broadcom measures the performance of your updated mainframe job, analyzes the results, and sends email notifications with the performance benchmarking reports to the intended recipients.  
 
@@ -362,9 +363,9 @@ The following sequence of the pipeline steps within the Build stage ensures the 
 1. **Compilation**  
 This step ensures the compilation of executables from the latest version of the source code in your SCM.  
 You have the following options to include the latest executable in your pipeline:  
-   *	Use a compiler of your choice that is integrated with your SCM.  
+   * Use a compiler of your choice that is integrated with your SCM.  
    To include the compilation step in your Jenkins pipeline, refer to the documentation of the chosen compiler.  
-   *	Add the built-in **Autogen** step that enables you to use the source code from your CA Endevor® sandbox.  
+   * Add the built-in **Autogen** step that enables you to use the source code from your CA Endevor® sandbox.  
    If you use CA Endevor®, you can include in the Build stage the Autogen step that is provided by the CA MAT Performance Benchmarking plugin by Broadcom. The Autogen step collects the source code from the specified CA Endevor® sandbox and compiles the job from this source after each update.  
     
 2. **Performance Benchmarking**  
@@ -378,7 +379,7 @@ To integrate performance benchmarking in your Jenkins pipeline using the CA MAT 
 
 
 ### Define the Compilation Step Details
-You define the compilation step details in the Build stage of your Jenkins pipeline. This step compiles the executable from the updated source code in your SCM that is associated with the job under performance analysis. 
+You define the compilation step details in the Build stage of your Freestyle Jenkins pipeline. This step compiles the executable from the updated source code in your SCM that is associated with the job under performance analysis. 
 
 The configuration of the compilation step depends on the SCM and the compiler that you use. Refer to the documentation of your specific compiler and SCM on how to include the compilation step in the Build stage of a Jenkins pipeline.
 
@@ -390,7 +391,7 @@ For users of CA Endevor®, the CA MAT Performance Benchmarking plugin by Broadco
 2. Click **Add build step** and select the **Autoge** step.  
 The Autogen parameter section opens.  
 Provide values for the following parameters:  
-   *	**Element**  
+   * **Element**  
    Specify the name of the element in your CA Endevor® sandbox that you want to include in the autogeneration process, for example, RUNCOB01. The maximum length is 8 characters.  
    You can specify several comma-separated elements within the sandbox, for example, RUNCOB01, RUNCOB02.  
    You can use wildcard characters * and % to define name patterns for the element names.  
@@ -398,23 +399,23 @@ Provide values for the following parameters:
           - Specify * to include all elements from the sandbox in the autogeneration process.  
           - Specify **RUNCOB*** to include all element names that start with RUNCOB.  
           - Specify **%%%COB** to include element names that contain the substring COB starting after position three.        
-   *	**Environment**  
+   * **Environment**  
    Provide the environment for the CA Endevor® sandbox that you want to include in the autogeneration process, for example, DEV.  
-   *	**System**  
+   * **System**  
    Provide the system name for the environment in your CA Endevor® sandbox that you want to include in the autogeneration process, for example, APCTTC0.  
-   *	**Subystem**  
+   * **Subystem**  
    Provide the subsystem name for the environment in your CA Endevor® sandbox that you want to include in the autogeneration process, for example, TESTCICD.  
-   *	**Stage**  
+   * **Stage**  
    Specify the environment stage in your CA Endevor® that you want to include in the autogeneration process, for example, 1.  
-   *	**Instance**  
+   * **Instance**  
    Specify the instance name of the Endevor environment that is associated with CA Endevor® Web services, for example, WEBSMFNE. For more information, refer to the [CA Endevor®](http://techdocs.broadcom.com/endevor) documentation.  
   
 3. (Optional) Select option **Override signout** to work with elements that might be currently used by another user.  
 Select the Override signout option only if you have the permission to override the signout of another user. 
     
 4. Confirm the Autogen step configuration using one of the following options:  
-   *	Click **Save** to save all changes and exit.  
-   *	Click **Apply** to save all changes and stay on the page.  
+   * Click **Save** to save all changes and exit.  
+   * Click **Apply** to save all changes and stay on the page.  
  
 You have defined the Autogen step within the Build stage of your Jenkins pipeline.  
 
@@ -438,8 +439,8 @@ The Performance Benchmarking section opens.
 The maximum length is 44 characters.  
 
 4. Confirm the Performance benchmarking step configuration using one of the following options:  
-   *	Click **Save** to save all changes and exit.  
-   *	Click **Apply** to save all changes and stay on the page.  
+   * Click **Save** to save all changes and exit.  
+   * Click **Apply** to save all changes and stay on the page.  
  
 You have defined the tested job for the Performance benchmarking step within the Build stage of your Jenkins pipeline.  
 
@@ -447,7 +448,7 @@ You have defined the tested job for the Performance benchmarking step within the
 ### Define Recipients of Performance Benchmarking Reports
 Specify the emails of the pipeline users intended to receive email notifications with the performance benchmarking report for the tested job.  
 
-  **Note:** To use the emailing option, ensure that you have configured the SMTP server details in the *Configure email notifications for CA MAT Performance Benchmarking by Broadcom* section of the Jenkins system configuration.  
+  **Note:** To use the emailing option, ensure that you have configured the SMTP server details in the *E-mail Notification* section of the Jenkins system configuration.  
 
 **Follow these steps:**  
 1. In the pipeline configuration window, navigate to the **Post-build Actions** stage.  
@@ -460,9 +461,48 @@ You can provide several comma-separated email addresses.
 
 4. Confirm the recipient list using one of the following options:  
    * Click **Save** to save all changes and exit.  
-   *	Click **Apply** to save all changes and stay on the page.  
+   * Click **Apply** to save all changes and stay on the page.  
  
 You have defined the recipients of emails with performance benchmarking reports for the tested job. If the tested job is included in the monitoring scope, the plugin sends a performance analysis report after each successful execution of the Performance benchmarking step.  
+
+### Pipeline Script
+You can configure your Jenkins pipeline with another project type called **Pipeline**. When you use the Pipeline type, you do not define the steps of the build stage through Jenkins UI. Instead, you manually provide the pipeline script using the pre-defined classes of the CA MAT Performance Benchmarking functionality that enable you to configure the same steps:  
+- Compilation  
+- Performance benchmarking  
+- Sending email notifications  
+
+The following example of the script employs the pre-defined classes to perform the CA MAT Performance Benchmarking functionality on the job TEST.POC.JCLLIB(TESTCICD) compiling all elements that reside in the TESTCICD CA Endevor® sandbox, and sends email notifications to the specified recipient:  
+
+```
+pipeline {
+    agent {
+		label 'master'
+	}
+	stages {
+		stage('Autogen compilation job') {
+            steps {
+                step([$class: 'Autogen', element: '*', environment: 'dev', 
+                system: 'APCTTC0', subsystem: 'TESTCICD', stage: '1',
+                instance: 'WEBSMFNE', signout: true])
+            }
+	    }
+	    stage('Performance Benchmarking') {
+            steps {
+                step([$class: 'PerformanceAnalysisBuilder', 
+                testjob: 'TEST.POC.JCLLIB(TESTCICD)'])
+            }
+	    }
+    }
+    post {
+		// Send email notification
+		always {
+		        step([$class: 'EmailPostBuildAction',
+		        recipients: 'user1@example.com'])
+		}
+    }
+}
+```  
+
 
 ## Execute the Pipeline
 Trigger the pipeline execution using either of the following options:  
