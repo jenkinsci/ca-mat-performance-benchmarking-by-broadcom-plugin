@@ -76,8 +76,10 @@ public class Root implements RootAction, ModelObjectWithContextMenu {
      */
     public PerformanceBenchmarking getDynamic(String name) {
         for (PerformanceBenchmarking ui : getAll()) {
-            if (ui.getUrlName().equals(name)) {
-                return ui;
+            if (ui != null && ui.getUrlName() != null) {
+                if (name != null && ui.getUrlName().equals(name)) {
+                    return ui;
+                }
             }
         }
         return null;
@@ -113,7 +115,8 @@ public class Root implements RootAction, ModelObjectWithContextMenu {
 
     /**
      * Get the context menu.
-     * @param request - the HTTP request
+     *
+     * @param request  - the HTTP request
      * @param response - the HTTP response
      * @return the context menu
      */
