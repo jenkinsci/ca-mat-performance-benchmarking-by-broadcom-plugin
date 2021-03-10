@@ -43,7 +43,7 @@
     <packaging>hpi</packaging>
 
     <name>CA MAT Performance Benchmarking by Broadcom</name>
-    <description>This plugin helps you integrate a performance testing stage in your CI/CD pipeline for proactive issue detection and analysis of mainframe applications.</description>
+    <description>Integrate performance testing in CI/CD pipelines to proactively detect and analyze issues in mainframe applications.</description>
 
     <properties>
         <jenkins.version>2.204.2</jenkins.version>

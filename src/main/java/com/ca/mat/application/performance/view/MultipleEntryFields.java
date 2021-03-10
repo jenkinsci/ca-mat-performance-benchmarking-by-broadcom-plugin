@@ -228,7 +228,7 @@ public abstract class MultipleEntryFields<T> extends PerformanceBenchmarking {
     protected class ProgressViewRendering extends ProgressiveRendering {
 
         @SuppressWarnings("unchecked")
-		@Override
+        @Override
         protected void compute() {
             XmlFile cc = getConfigFile();
             MultipleEntryFields<T> read = null;

@@ -29,15 +29,17 @@ package com.ca.mat.application.performance.control.email;
 
 import com.ca.mat.application.performance.model.AnalysisOutput;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -259,15 +261,18 @@ public class PMAReportNotificationHelper {
     }
 
 
-    private PMAReportNotificationHelper() throws URISyntaxException, IOException {
-        reportTemplate1 = new String(Files.readAllBytes(Paths.get(PMAReportNotificationHelper.class.getResource
-                ("report_template_1.html").toURI())), StandardCharsets.UTF_8);
-        reportTemplate2 = new String(Files.readAllBytes(Paths.get(PMAReportNotificationHelper.class.getResource
-                ("report_template_2.html").toURI())), StandardCharsets.UTF_8);
-        reportTemplate3 = new String(Files.readAllBytes(Paths.get(PMAReportNotificationHelper.class.getResource
-                ("report_template_3.html").toURI())), StandardCharsets.UTF_8);
-        reportTemplate4 = new String(Files.readAllBytes(Paths.get(PMAReportNotificationHelper.class.getResource
-                ("report_template_4.html").toURI())), StandardCharsets.UTF_8);
+    private PMAReportNotificationHelper() {
+
+        reportTemplate1 = getUri("report_template_1.html");
+        reportTemplate2 = getUri("report_template_2.html");
+        reportTemplate3 = getUri("report_template_3.html");
+        reportTemplate4 = getUri("report_template_4.html");
+    }
+
+    private String getUri(String file) {
+        InputStream in = getClass().getResourceAsStream(file);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.defaultCharset()));
+        return reader.lines().collect(Collectors.joining());
     }
 
     /**
