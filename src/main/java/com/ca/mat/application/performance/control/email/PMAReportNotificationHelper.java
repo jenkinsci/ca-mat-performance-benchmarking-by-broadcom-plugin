@@ -117,7 +117,7 @@ public class PMAReportNotificationHelper {
     /**
      * Sends the PMA Analysis results to the users on the pipeline.
      *
-     * @param output      - the pipeline report output.
+     * @param output - the pipeline report output.
      * @return String     - the e-mail template.
      */
     public String getTemplate(AnalysisOutput output) {
@@ -271,8 +271,19 @@ public class PMAReportNotificationHelper {
 
     private String getUri(String file) {
         InputStream in = getClass().getResourceAsStream(file);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.defaultCharset()));
-        return reader.lines().collect(Collectors.joining());
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(in, Charset.defaultCharset()));
+            return reader.lines().collect(Collectors.joining());
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("An error occurred while closing the reader stream for file " + file);
+                }
+            }
+        }
     }
 
     /**
