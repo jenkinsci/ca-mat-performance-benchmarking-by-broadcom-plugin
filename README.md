@@ -8,9 +8,10 @@ Table of Contents
 =================
 * [Summary](#summary)
 * [Prerequisites](#prerequisites)
+* [Supported Systems](#supported-systems)
 * [Installing](#installing)
   * [Automated Component Installation](#automated-component-installation)
-  * [Component Compatibility](component-compatibility)
+  * [Component Compatibility](#component-compatibility)
 * [Configure the Plugin](#configure-the-plugin)
   * [Define the CA MAT Analyze Profile](#define-the-ca-mat-analyze-profile)
   * [Define the CA MAT Detect Profile](#define-the-ca-mat-detect-profile)
@@ -57,6 +58,12 @@ Optionally, CA Endevor® SCM users can automate the compilation process of updat
 
 For detailed information, refer to the respective sections of the [CA Mainframe Application Tuner (CA MAT)](http://techdocs.broadcom.com/mat) and [CA Endevor®](http://techdocs.broadcom.com/endevor) documentation.  
 
+# Supported Systems
+This version of the plugin supports the following operating systems of your Jenkins machine:  
+- Windows (All versions supported by Jenkins).  
+
+Linux-based operating systems are likely to be supported but have not been tested.  
+
 # Installing
 Install the CA MAT Performance Benchmarking plugin by Broadcom using the Jenkins plugin management functionality. For more information, see [Managing Plugins](https://www.jenkins.io/doc/book/managing/plugins/) in the Jenkins documentation.
   
@@ -77,6 +84,8 @@ If some of the required components are already installed on your Jenkins machine
 - CA MAT Detect plug-in for Zowe CLI - version 1.0.1  
 - CA MAT Analyze plug-in for Zowe CLI  - version 1.0.2  
 - CA Endevor SCM plug-in for Zowe CLI  - version 5.7.2  
+
+**Note**: If you have Zowe CLI already installed on your Jenkins machine, you need to configure the Jenkins machine to start the Jenkins service with the user that has access to the Zowe command line (usually, the admin). The setup depends upon the operating system of your Jenkins machine. For example, in Windows, go to the Services application, edit the properties of the Jenkins service, and define the user in the This account field. After you reassign a user, restart the Jenkins service.  
 
 After the successful installation of the CA MAT Performance Benchmarking plugin by Broadcom, the **Performance Benchmarking** option appears in the main Jenkins menu. By clicking the Performance Benchmarking option, you access the Configure Performance Benchmarking page. When you enter the Performance Benchmarking page, the plugin re-verifies whether you have all the necessary components installed. 
 
