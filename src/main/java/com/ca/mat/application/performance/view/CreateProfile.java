@@ -247,22 +247,25 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
     /**
      * This method downloads and installs the latest version of the zowe cli, if not installed in the computer.
      */
-    protected void downloadZoweCLI() {
+    protected boolean downloadZoweCLI() {
         String cli = "zowe";
         LOGGER.info("Checking installation of zowe");
         String response = zoweCmd.getCommandOutputNoTimeout(cli).toLowerCase();
-        if (response.contains("error")) {
+        if (response.contains("error") || response.contains("not recognized")) {
             LOGGER.info("Not found... Trying to install zowe");
             cli = "npm install -g @zowe/cli@zowe-" + getZoweVersionLTS();
             response = zoweCmd.getCommandOutputNoTimeout(cli);
-            if (response.contains("error")) {
-                LOGGER.info("Zowe plugin installed sucessfully.");
+            if (downloadZoweCLI()) {
+                LOGGER.info("Zowe CLI " + getZoweVersionLTS() + " installed sucessfully.");
+                return true;
             } else {
                 LOGGER.info("Could not install zowe cli plugin.");
                 LOGGER.info(response);
+                return false;
             }
         } else {
             LOGGER.info("Zowe is installed correctly.");
+            return true;
         }
     }
 
