@@ -550,7 +550,7 @@ You can access the performance analysis results in the following locations:
 * Performance benchmarking reports
 
 
-### Pipeline Build Log+
+### Pipeline Build Log
 You can view a simplified performance benchmarking report for a job in the Jenkins pipeline build log. To access the log, click the build number in the **Build History** section of the pipeline, then click **Console Output**.  
 
 The log displays the job details and measurement results for the key performance metrics as follows:
