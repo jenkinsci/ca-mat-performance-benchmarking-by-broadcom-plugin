@@ -357,7 +357,7 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
     /**
      * Returns the plugin display name.
      *
-     * @return e.g.: CA Endevor, CA MAT...
+     * @return e.g.: Endevor, MAT...
      */
     protected abstract String getPluginDisplayName();
 }
