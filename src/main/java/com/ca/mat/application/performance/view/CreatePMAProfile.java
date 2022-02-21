@@ -52,8 +52,8 @@ public class CreatePMAProfile extends CreateProfile<CreatePMAProfile.AddProfile>
 
     @Override
     public String getDescription() {
-        return "The CA MAT Detect profile enables the communication of the plugin with the Performance Management " +
-                "Assistant component (PMA) of CA MAT that ensures the automatic performance issue detection.";
+        return "The MAT Detect profile enables the communication of the plugin with the Performance Management " +
+                "Assistant component (PMA) of MAT that ensures the automatic performance issue detection.";
     }
 
     @Override
@@ -98,7 +98,7 @@ public class CreatePMAProfile extends CreateProfile<CreatePMAProfile.AddProfile>
 
     @Override
     protected String getPluginDisplayName() {
-        return "CA MAT Detect";
+        return "MAT Detect";
     }
 
     /**
@@ -324,7 +324,7 @@ public class CreatePMAProfile extends CreateProfile<CreatePMAProfile.AddProfile>
         public static class DescriptorImpl extends Descriptor<CreatePMAProfile.AddProfile> {
             @Override
             public String getDisplayName() {
-                return "CA MAT Detect Profile";
+                return "MAT Detect Profile";
             }
         }
 
