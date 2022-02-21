@@ -51,8 +51,8 @@ public final class CreateMATProfile extends CreateProfile<CreateMATProfile.AddPr
 
     @Override
     public String getDescription() {
-        return "The CA MAT Analyze profile enables the communication of the plugin with " +
-                "CA Mainframe Application Tuner (CA MAT) that ensures the analysis of the detected performance issue.";
+        return "The MAT Analyze profile enables the communication of the plugin with " +
+                "Mainframe Application Tuner (MAT) that ensures the analysis of the detected performance issue.";
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class CreateMATProfile extends CreateProfile<CreateMATProfile.AddPr
 
     @Override
     protected String getPluginDisplayName() {
-        return "CA MAT Analyze";
+        return "MAT Analyze";
     }
 
     /**
@@ -333,7 +333,7 @@ public final class CreateMATProfile extends CreateProfile<CreateMATProfile.AddPr
         public static class DescriptorImpl extends Descriptor<AddProfile> {
             @Override
             public String getDisplayName() {
-                return "CA MAT Analyze Profile";
+                return "MAT Analyze Profile";
 
             }
 

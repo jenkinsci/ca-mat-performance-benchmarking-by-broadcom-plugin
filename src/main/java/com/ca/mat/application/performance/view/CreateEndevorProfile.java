@@ -57,7 +57,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
 
     @Override
     public String getDescription() {
-        return "The CA Endevor profile enables the communication of the plugin with CA Endevor® " +
+        return "The Endevor profile enables the communication of the plugin with Endevor® " +
                 "and enables you to remotely interact with your source code.";
     }
 
@@ -117,7 +117,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
 
     @Override
     protected String getPluginDisplayName() {
-        return "CA Endevor";
+        return "Endevor";
     }
 
     /**
@@ -163,7 +163,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
     }
 
     /**
-     * This inner class represents the configuration of the CA Endevor entries.
+     * This inner class represents the configuration of the Endevor entries.
      */
     public static final class Config extends AbstractDescribableImpl<CreateEndevorProfile.Config> {
 
@@ -381,7 +381,7 @@ public final class CreateEndevorProfile extends CreateProfile<CreateEndevorProfi
         public static class DescriptorImpl extends Descriptor<CreateEndevorProfile.AddProfile> {
             @Override
             public String getDisplayName() {
-                return "CA Endevor Profile";
+                return "Endevor Profile";
             }
 
             /**

@@ -71,7 +71,7 @@ public class Autogen extends Builder implements SimpleBuildStep {
      */
     private final String stage;
     /**
-     * String for generating CA Endevor element passing parameters.
+     * String for generating Endevor element passing parameters.
      */
     private static final String storProcFormat = "GENERATE ELEMENT %s FROM ENV '%s' SYS '%s' SUB '%s' TYPE '*' " +
             "STAGE %s OPTIONS CCID PMA COMMENT 'AUTOGEN' %s AUTOGEN SPAN NONE .";
@@ -91,7 +91,7 @@ public class Autogen extends Builder implements SimpleBuildStep {
     /**
      * Constructor.
      *
-     * @param element     the CA Endevor element
+     * @param element     the Endevor element
      * @param environment the environment
      * @param system      the system
      * @param subsystem   the subsystem
