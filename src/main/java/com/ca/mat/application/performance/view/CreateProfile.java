@@ -247,35 +247,23 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
     /**
      * This method downloads and installs the latest version of the zowe cli, if not installed in the computer.
      */
-    protected boolean downloadZoweCLI() {
+    protected void downloadZoweCLI() {
         String cli = "zowe";
         LOGGER.info("Checking installation of zowe");
         String response = zoweCmd.getCommandOutputNoTimeout(cli).toLowerCase();
-        if (response.contains("error") || response.contains("not recognized")) {
+        if (response.contains("error")) {
             LOGGER.info("Not found... Trying to install zowe");
-            cli = "npm install -g @zowe/cli@zowe-" + getZoweVersionLTS();
+            cli = "npm install -g @zowe/cli@zowe-v1-lts";
             response = zoweCmd.getCommandOutputNoTimeout(cli);
-            if (downloadZoweCLI()) {
-                LOGGER.info("Zowe CLI " + getZoweVersionLTS() + " installed sucessfully.");
-                return true;
+            if (response.contains("error")) {
+                LOGGER.info("Zowe plugin installed sucessfully.");
             } else {
                 LOGGER.info("Could not install zowe cli plugin.");
                 LOGGER.info(response);
-                return false;
             }
         } else {
             LOGGER.info("Zowe is installed correctly.");
-            return true;
         }
-    }
-
-    private String getZoweVersionLTS() {
-        String zoweVersion = PluginConfiguration.get().getZowe();
-        if (zoweVersion == null) {
-            //Default Zowe Version.
-            zoweVersion = "v2-lts";
-        }
-        return zoweVersion;
     }
 
     /**
@@ -291,7 +279,7 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
         String response = zoweCmd.getCommandOutputNoTimeout(cli).toLowerCase();
         if (response.contains("error")) {
             LOGGER.info("Not found, trying to install zowe " + getPluginCmd() + " plugin");
-            cli = "zowe plugins install " + getPluginName() + "@zowe-" + getZoweVersionLTS();
+            cli = "zowe plugins install " + getPluginName() + "@zowe-v1-lts";
             response = zoweCmd.getCommandOutputNoTimeout(cli);
             if (response.contains("error")) {
                 LOGGER.info("Could not install " + getPluginName());
@@ -369,7 +357,7 @@ public abstract class CreateProfile<T extends CreateProfile.AddProfile> extends 
     /**
      * Returns the plugin display name.
      *
-     * @return e.g.: CA Endevor, CA MAT...
+     * @return e.g.: Endevor, MAT...
      */
     protected abstract String getPluginDisplayName();
 }
