@@ -39,10 +39,10 @@
 
     <groupId>com.ca.broadcom.plugins</groupId>
     <artifactId>ca-mat-performance-benchmarking-by-broadcom</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.8-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
-    <name>CA MAT Performance Benchmarking by Broadcom</name>
+    <name>MAT Performance Benchmarking by Broadcom</name>
     <description>Integrate performance testing in CI/CD pipelines to proactively detect and analyze issues in mainframe applications.</description>
 
     <properties>
